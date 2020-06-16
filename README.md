@@ -16,7 +16,7 @@ Usage follows the pattern used by the other hash methods available in Java.
 
 ```
 MessageDigest tlshDigest = MessageDigest.getInstance("TLSH");
-tlshDigest.update("Hello world!");
+tlshDigest.update("Hello world!".getBytes());
 byte[] hash = tlshDigest.digest();
 ```
 
