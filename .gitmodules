@@ -1,0 +1,3 @@
+[submodule "ktlsh/src/test/resources/tlsh"]
+	path = ktlsh/src/test/resources/tlsh
+	url = https://github.com/trendmicro/tlsh.git
