@@ -82,6 +82,58 @@
     <module name="TodoComment"/>
     <module name="UpperEll"/>
     <module name="SuppressWarningsHolder"/>
+    <module name="MissingDeprecated"/>
+    <module name="MissingOverride"/>
+    <module name="PackageAnnotation"/>
+    <module name="JavadocMissingWhitespaceAfterAsterisk"/>
+    <module name="MissingJavadocPackage"/>
+    <module name="MissingJavadocType"/>
+    <module name="NonEmptyAtclauseDescription">
+      <property name="javadocTokens" value="PARAM_LITERAL,RETURN_LITERAL,THROWS_LITERAL,EXCEPTION_LITERAL,DEPRECATED_LITERAL"/>
+    </module>
+    <module name="SummaryJavadoc"/>
+    <module name="AtclauseOrder"/>
+    <module name="JavadocBlockTagLocation"/>
+    <module name="JavadocParagraph"/>
+    <module name="SingleLineJavadoc"/>
+    <module name="AbstractClassName"/>
+    <module name="AbbreviationAsWordInName">
+      <property name="allowedAbbreviationLength" value="4"/>
+    </module>
+    <module name="CatchParameterName"/>
+    <module name="LambdaParameterName"/>
+    <module name="AvoidStaticImport">
+      <property name="excludes" value="org.junit.jupiter.api.Assertions.*"/>
+    </module>
+    <module name="AnonInnerLength"/>
+    <module name="EmptyCatchBlock"/>
+    <module name="CovariantEquals"/>
+    <module name="DefaultComesLast"/>
+    <module name="DeclarationOrder"/>
+    <module name="EqualsAvoidNull"/>
+    <module name="ExplicitInitialization"/>
+    <module name="FallThrough"/>
+    <module name="FinalLocalVariable"/>
+    <module name="IllegalCatch"/>
+    <module name="IllegalThrows"/>
+    <module name="ModifiedControlVariable"/>
+    <module name="MultipleStringLiterals">
+      <property name="allowedDuplicates" value="3"/>
+    </module>
+    <module name="NoArrayTrailingComma"/>
+    <module name="NoEnumTrailingComma"/>
+    <module name="NoFinalizer"/>
+    <module name="PackageDeclaration"/>
+    <module name="UnnecessaryParentheses"/>
+    <module name="UnnecessarySemicolonAfterOuterTypeDeclaration"/>
+    <module name="UnnecessarySemicolonAfterTypeMemberDeclaration"/>
+    <module name="UnnecessarySemicolonInEnumeration"/>
+    <module name="UnnecessarySemicolonInTryWithResources"/>
+    <module name="OneStatementPerLine"/>
+    <module name="VariableDeclarationUsageDistance"/>
+    <module name="OverloadMethodsDeclarationOrder"/>
+    <module name="UncommentedMain"/>
+    <module name="AvoidEscapedUnicodeCharacters"/>
   </module>
   <module name="SuppressWarningsFilter"/>
   <module name="BeforeExecutionExclusionFileFilter">
@@ -99,5 +151,8 @@
   <module name="RegexpSingleline">
     <property name="format" value="[^*]\s+$"/>
     <property name="message" value="Line has trailing spaces."/>
+  </module>
+  <module name="Header">
+    <property name="headerFile" value="${config_loc}/header.txt"/>
   </module>
 </module>

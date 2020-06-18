@@ -28,9 +28,19 @@ import app.keve.ktlsh.impl.TLSHDigest6;
 import app.keve.ktlsh.impl.TLSHDigest7;
 import app.keve.ktlsh.impl.TLSHDigest8;
 
+/**
+ * The provider for the K set of algorithms to compute TLSH.
+ * 
+ * @author keve
+ *
+ */
 public final class KProvider extends Provider {
     /** The canonical name of the provider. */
     public static final String NAME = "KProvider";
+    /** The MessageDigest type string. */
+    private static final String MESSAGE_DIGEST = "MessageDigest";
+    /** The SPI class. */
+    private static final String MESSAGE_DIGEST_SPI = "app.keve.ktlsh.spi.KTLSHMessageDigestSpi";
     /** Version UID. */
     private static final long serialVersionUID = 1L;
 
@@ -41,27 +51,26 @@ public final class KProvider extends Provider {
         super(NAME, "1.0",
                 "Implementation of the TLSH - Trend Locality Sensitive Hash MessageDigest using app.keve.ktlsh.");
 
-        int[] buckets = {128, 256};
-        int[] checksum = {1, 3};
-        int[] windowSize = {TLSHDigest4.WINDOW_LENGTH, TLSHDigest5.WINDOW_LENGTH, TLSHDigest6.WINDOW_LENGTH,
+        final int[] buckets = {128, 256};
+        final int[] checksum = {1, 3};
+        final int[] windowSize = {TLSHDigest4.WINDOW_LENGTH, TLSHDigest5.WINDOW_LENGTH, TLSHDigest6.WINDOW_LENGTH,
                 TLSHDigest7.WINDOW_LENGTH, TLSHDigest8.WINDOW_LENGTH};
         for (int i = 0; i < buckets.length; i++) {
             for (int j = 0; j < checksum.length; j++) {
                 for (int k = 0; k < windowSize.length; k++) {
-                    String fullName = String.format("TLSH-%d-%d/%d", buckets[i], checksum[j], windowSize[k]);
+                    final String fullName = String.format("TLSH-%d-%d/%d", buckets[i], checksum[j], windowSize[k]);
                     if (TLSHDigest5.WINDOW_LENGTH == windowSize[k]) {
-                        String shortName = String.format("TLSH-%d-%d", buckets[i], checksum[j]);
+                        final String shortName = String.format("TLSH-%d-%d", buckets[i], checksum[j]);
                         if (1 == checksum[j] && 128 == buckets[i]) {
-                            putService(new ProviderService(this, "MessageDigest", fullName,
-                                    "app.keve.ktlsh.spi.KTLSHMessageDigestSpi", "TLSH", shortName));
+                            putService(new ProviderService(this, MESSAGE_DIGEST, fullName, MESSAGE_DIGEST_SPI, "TLSH",
+                                    shortName));
 
                         } else {
-                            putService(new ProviderService(this, "MessageDigest", fullName,
-                                    "app.keve.ktlsh.spi.KTLSHMessageDigestSpi", shortName));
+                            putService(
+                                    new ProviderService(this, MESSAGE_DIGEST, fullName, MESSAGE_DIGEST_SPI, shortName));
                         }
                     } else {
-                        putService(new ProviderService(this, "MessageDigest", fullName,
-                                "app.keve.ktlsh.spi.KTLSHMessageDigestSpi"));
+                        putService(new ProviderService(this, MESSAGE_DIGEST, fullName, MESSAGE_DIGEST_SPI));
                     }
                 }
             }
@@ -77,21 +86,22 @@ public final class KProvider extends Provider {
             super(p, type, algo, cn, List.of(aliases), null);
         }
 
+        @SuppressWarnings("checkstyle:IllegalCatch")
         @Override
         public Object newInstance(final Object ctrParamObj) throws NoSuchAlgorithmException {
-            String type = getType();
-            String algo = getAlgorithm();
+            final String type = getType();
+            final String algo = getAlgorithm();
             try {
-                if (type.equals("MessageDigest")) {
-                    Matcher matcher = ALG_PATTERN.matcher(algo);
+                if (MESSAGE_DIGEST.equals(type)) {
+                    final Matcher matcher = ALG_PATTERN.matcher(algo);
                     if (matcher.matches()) {
-                        int bucketCount = Integer.valueOf(matcher.group(1));
-                        int checksumCount = Integer.valueOf(matcher.group(2));
-                        int windowSize = Integer.valueOf(matcher.group(3));
+                        final int bucketCount = Integer.valueOf(matcher.group(1));
+                        final int checksumCount = Integer.valueOf(matcher.group(2));
+                        final int windowSize = Integer.valueOf(matcher.group(3));
                         return new TLSHMessageDigestSpiK(windowSize, bucketCount, checksumCount);
                     }
                 }
-            } catch (Exception ex) {
+            } catch (final Exception ex) {
                 throw new NoSuchAlgorithmException(
                         "Error constructing " + type + " for " + algo + " using KAppProvider", ex);
             }

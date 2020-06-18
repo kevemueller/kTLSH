@@ -27,13 +27,19 @@ import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * Test the Pearson hash implementation.
+ * 
+ * @author keve
+ *
+ */
 public class TestPearson {
     /**
      * Test Pearson default instance.
      */
     @Test
     public void testDefaultInstance() {
-        Pearson p = Pearson.defaultInstance();
+        final Pearson p = Pearson.defaultInstance();
         assertEquals(256, IntStream.of(p.t).distinct().count());
         for (int i = 0; i < 256; i++) {
             assertEquals(Pearson.T[i], p.hash(i));
@@ -45,7 +51,7 @@ public class TestPearson {
      */
     @Test
     public void testHashByte() {
-        Pearson p = Pearson.defaultInstance();
+        final Pearson p = Pearson.defaultInstance();
         assertEquals(256, IntStream.of(p.t).distinct().count());
         for (int i = 0; i < 256; i++) {
             assertEquals(Pearson.T[i], p.hash(new byte[] {(byte) i}));
@@ -57,7 +63,7 @@ public class TestPearson {
      */
     @Test
     public void testRandomInstance() {
-        Pearson p = Pearson.randomInstance();
+        final Pearson p = Pearson.randomInstance();
         System.out.println(p);
         assertEquals(256, IntStream.of(p.t).distinct().count());
     }
@@ -68,7 +74,7 @@ public class TestPearson {
     @Test
     public void testEquals() {
         assertEquals(Pearson.defaultInstance(), Pearson.of(Pearson.T));
-        Pearson p = Pearson.randomInstance();
+        final Pearson p = Pearson.randomInstance();
         assertFalse(Pearson.defaultInstance().equals(p));
         assertEquals(p, Pearson.of(p.t));
     }
@@ -78,11 +84,11 @@ public class TestPearson {
      */
     @Test
     public void testBadPermutation() {
-        List<Integer> l = IntStream.range(0, 256).boxed().collect(Collectors.toList());
+        final List<Integer> l = IntStream.range(0, 256).boxed().collect(Collectors.toList());
         Collections.shuffle(l);
-        int[] t = new int[256];
+        final int[] t = new int[256];
         int i = 0;
-        for (Iterator<Integer> it = l.iterator(); it.hasNext();) {
+        for (final Iterator<Integer> it = l.iterator(); it.hasNext();) {
             t[i++] = it.next();
         }
 
@@ -96,11 +102,11 @@ public class TestPearson {
      */
     @Test
     public void testBadRange() {
-        List<Integer> l = IntStream.range(0, 256).boxed().collect(Collectors.toList());
+        final List<Integer> l = IntStream.range(0, 256).boxed().collect(Collectors.toList());
         Collections.shuffle(l);
-        int[] t = new int[256];
+        final int[] t = new int[256];
         int i = 0;
-        for (Iterator<Integer> it = l.iterator(); it.hasNext();) {
+        for (final Iterator<Integer> it = l.iterator(); it.hasNext();) {
             t[i++] = it.next();
         }
 

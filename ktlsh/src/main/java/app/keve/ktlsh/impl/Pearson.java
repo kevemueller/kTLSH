@@ -61,7 +61,7 @@ public final class Pearson {
     public int hash(final byte[] buf) {
         int h = 0;
         for (int i = 0; i < buf.length; i++) {
-            h = t[h ^ (buf[i] & 0xFF)];
+            h = t[h ^ buf[i] & 0xFF];
         }
         return h;
     }
@@ -128,11 +128,11 @@ public final class Pearson {
      * @return the instance.
      */
     public static Pearson randomInstance() {
-        int[] t = new int[256];
-        List<Integer> l = IntStream.range(0, 256).boxed().collect(Collectors.toList());
+        final int[] t = new int[256];
+        final List<Integer> l = IntStream.range(0, 256).boxed().collect(Collectors.toList());
         Collections.shuffle(l);
         int i = 0;
-        for (Iterator<Integer> it = l.iterator(); it.hasNext();) {
+        for (final Iterator<Integer> it = l.iterator(); it.hasNext();) {
             t[i++] = it.next();
         }
 
@@ -170,13 +170,13 @@ public final class Pearson {
         if (!(obj instanceof Pearson)) {
             return false;
         }
-        Pearson other = (Pearson) obj;
+        final Pearson other = (Pearson) obj;
         return hashCode == other.hashCode && Arrays.equals(t, other.t);
     }
 
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer("Pearson");
+        final StringBuffer sb = new StringBuffer("Pearson");
         sb.append(Arrays.toString(t));
         return sb.toString();
     }

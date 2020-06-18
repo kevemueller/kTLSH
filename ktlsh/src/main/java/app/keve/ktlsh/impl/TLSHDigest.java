@@ -17,6 +17,12 @@ package app.keve.ktlsh.impl;
 
 import java.nio.ByteBuffer;
 
+/**
+ * The base interface for TLSH digesters.
+ * 
+ * @author keve
+ *
+ */
 public interface TLSHDigest {
 
     /**

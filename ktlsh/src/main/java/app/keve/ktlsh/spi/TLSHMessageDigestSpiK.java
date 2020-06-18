@@ -22,6 +22,12 @@ import app.keve.ktlsh.impl.TLSH;
 import app.keve.ktlsh.impl.TLSHDigest;
 import app.keve.ktlsh.impl.TLSHDigest5;
 
+/**
+ * The Service Provider for the kTLSH implementation.
+ * 
+ * @author keve
+ *
+ */
 public final class TLSHMessageDigestSpiK extends MessageDigestSpi {
     /** The underlying TLSH digester implementation. */
     private final TLSHDigest impl;
@@ -34,7 +40,7 @@ public final class TLSHMessageDigestSpiK extends MessageDigestSpi {
 
     TLSHMessageDigestSpiK(final int windowLength, final int bucketCount, final int checksumLength) {
         impl = TLSHDigest.of(windowLength, bucketCount, checksumLength);
-        int l = (bucketCount / 2) + (checksumLength * 2) + 4;
+        final int l = bucketCount / 2 + checksumLength * 2 + 4;
         this.digestLength = l / 2;
     }
 
@@ -60,7 +66,7 @@ public final class TLSHMessageDigestSpiK extends MessageDigestSpi {
 
     @Override
     protected byte[] engineDigest() {
-        TLSH hash = impl.digest();
+        final TLSH hash = impl.digest();
         impl.reset();
         return hash.pack();
     }

@@ -17,6 +17,12 @@ package app.keve.ktlsh.impl;
 
 import java.nio.ByteBuffer;
 
+/**
+ * A TLSH digester for window size of 6 bytes.
+ * 
+ * @author keve
+ *
+ */
 public final class TLSHDigest6 extends AbstractTLSHDigest {
     /**
      * The supported window length.
@@ -42,12 +48,12 @@ public final class TLSHDigest6 extends AbstractTLSHDigest {
     @SuppressWarnings("checkstyle:MagicNumber")
     public void update(final ByteBuffer buf) {
         int l1 = (int) (lag & 0xFF);
-        int l2 = (int) ((lag >>> 8) & 0xFF);
-        int l3 = (int) ((lag >>> 16) & 0xFF);
-        int l4 = (int) ((lag >>> 24) & 0xFF);
-        int l5 = (int) ((lag >>> 32) & 0xFF);
+        int l2 = (int) (lag >>> 8 & 0xFF);
+        int l3 = (int) (lag >>> 16 & 0xFF);
+        int l4 = (int) (lag >>> 24 & 0xFF);
+        int l5 = (int) (lag >>> 32 & 0xFF);
         while (buf.hasRemaining()) {
-            int l0 = buf.get() & 0xFF;
+            final int l0 = buf.get() & 0xFF;
             count++;
             if (count >= windowLength) {
                 switch (checkSumLength) {
@@ -91,7 +97,7 @@ public final class TLSHDigest6 extends AbstractTLSHDigest {
 
     @Override
     protected int[] getLag() {
-        return new int[] {(int) (lag & 0xFF), (int) ((lag >>> 8) & 0xFF), (int) ((lag >>> 16) & 0xFF),
-                (int) ((lag >>> 24) & 0xFF), (int) ((lag >>> 32) & 0xFF)};
+        return new int[] {(int) (lag & 0xFF), (int) (lag >>> 8 & 0xFF), (int) (lag >>> 16 & 0xFF),
+                (int) (lag >>> 24 & 0xFF), (int) (lag >>> 32 & 0xFF)};
     }
 }

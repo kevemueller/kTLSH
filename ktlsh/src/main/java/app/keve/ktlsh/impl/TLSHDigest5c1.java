@@ -17,6 +17,13 @@ package app.keve.ktlsh.impl;
 
 import java.nio.ByteBuffer;
 
+/**
+ * A TLSH digester for window size of 5 bytes and single checksum byte.
+ * This is the default TLSH algorithm case.
+ * 
+ * @author keve
+ *
+ */
 public final class TLSHDigest5c1 extends AbstractTLSHDigest {
     /**
      * The supported window length.
@@ -40,8 +47,8 @@ public final class TLSHDigest5c1 extends AbstractTLSHDigest {
     @Override
     @SuppressWarnings("checkstyle:MagicNumber")
     public void update(final ByteBuffer buf) {
-        while (count < (windowLength - 1) && buf.hasRemaining()) {
-            int l0 = buf.get() & 0xFF;
+        while (count < windowLength - 1 && buf.hasRemaining()) {
+            final int l0 = buf.get() & 0xFF;
             count++;
             lag <<= 8;
             lag |= l0;
@@ -49,12 +56,12 @@ public final class TLSHDigest5c1 extends AbstractTLSHDigest {
                 return;
             }
         }
-        int l1 = (lag & 0xFF);
-        int l2 = ((lag >>> 8) & 0xFF);
-        int l3 = ((lag >>> 16) & 0xFF);
-        int l4 = ((lag >>> 24) & 0xFF);
+        int l1 = lag & 0xFF;
+        int l2 = lag >>> 8 & 0xFF;
+        int l3 = lag >>> 16 & 0xFF;
+        int l4 = lag >>> 24 & 0xFF;
         while (buf.hasRemaining()) {
-            int l0 = buf.get() & 0xFF;
+            final int l0 = buf.get() & 0xFF;
             count++;
 
             checksum[0] = sMapping(1 /* T[0] */, l0, l1, checksum[0]);
@@ -77,7 +84,7 @@ public final class TLSHDigest5c1 extends AbstractTLSHDigest {
 
     @Override
     protected int[] getLag() {
-        return new int[] {lag & 0xFF, ((lag >>> 8) & 0xFF), ((lag >>> 16) & 0xFF), ((lag >>> 24) & 0xFF)};
+        return new int[] {lag & 0xFF, lag >>> 8 & 0xFF, lag >>> 16 & 0xFF, lag >>> 24 & 0xFF};
     }
 
 }

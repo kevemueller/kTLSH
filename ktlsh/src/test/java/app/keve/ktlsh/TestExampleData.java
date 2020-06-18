@@ -31,9 +31,19 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+/**
+ * Test hashing and scoring based on reference testing data and expected
+ * results.
+ * 
+ * @author keve
+ *
+ */
 public final class TestExampleData {
     /** Base directory of the unit test data. */
     private static final String BASE = "/tlsh/Testing/";
+
+    /** The prefix of the test file resources. */
+    private static final String PATH_PREFIX = "../Testing/";
 
     /** TLSH provider name. */
     private final String provider;
@@ -53,9 +63,9 @@ public final class TestExampleData {
      * 
      * @param resourceName the name of the resource.
      * @param expectedHash the expected hash of the stream content.
-     * @throws IOException
-     * @throws NoSuchAlgorithmException
-     * @throws NoSuchProviderException
+     * @throws IOException              if an I/O error occurs
+     * @throws NoSuchAlgorithmException if the TLSH algorithm is not registered
+     * @throws NoSuchProviderException  if the provider is not registered
      */
     @ParameterizedTest(name = "{0}")
     @MethodSource("exampleLines")
@@ -69,6 +79,10 @@ public final class TestExampleData {
         assertEquals(expectedHash, encodedHash);
     }
 
+    private String formatAlg(final String bits, final String check) {
+        return String.format("TLSH-%s-%s", bits, check);
+    }
+
     /**
      * Test the hashes in the expLen files.
      * 
@@ -77,15 +91,15 @@ public final class TestExampleData {
      * @param check         the checksum bytes.
      * @param resourceName  the name of the resource
      * @param expectedHash  the expected hash of the stream content.
-     * @throws IOException
-     * @throws NoSuchAlgorithmException
-     * @throws NoSuchProviderException
+     * @throws IOException              if an I/O error occurs
+     * @throws NoSuchAlgorithmException if the TLSH algorithm is not registered
+     * @throws NoSuchProviderException  if the provider is not registered
      */
     @ParameterizedTest(name = "{1}-{2} {3}")
     @MethodSource("expLen")
     public void testExpLen(final String resourceGroup, final String bits, final String check, final String resourceName,
             final String expectedHash) throws IOException, NoSuchAlgorithmException, NoSuchProviderException {
-        final MessageDigest mdx = MessageDigest.getInstance("TLSH-" + bits + "-" + check, provider);
+        final MessageDigest mdx = MessageDigest.getInstance(formatAlg(bits, check), provider);
         final InputStream resource = resourceStream(resourceName);
         final byte[] buf = resource.readAllBytes();
         final byte[] hash = mdx.digest(buf);
@@ -112,16 +126,16 @@ public final class TestExampleData {
      * @param resource1Name the name of the first resource
      * @param resource2Name the name of the second resource
      * @param expectedScore the expected score of the stream content hashes.
-     * @throws IOException
-     * @throws NoSuchAlgorithmException
-     * @throws NoSuchProviderException
+     * @throws IOException              if an I/O error occurs
+     * @throws NoSuchAlgorithmException if the TLSH algorithm is not registered
+     * @throws NoSuchProviderException  if the provider is not registered
      */
     @ParameterizedTest(name = "{1}-{2} {3}")
     @MethodSource("expLenScore")
     public void testExpLenScore(final String resourceGroup, final String bits, final String check,
             final String resource1Name, final String resource2Name, final int expectedScore)
             throws IOException, NoSuchAlgorithmException, NoSuchProviderException {
-        final MessageDigest mdx = MessageDigest.getInstance("TLSH-" + bits + "-" + check, provider);
+        final MessageDigest mdx = MessageDigest.getInstance(formatAlg(bits, check), provider);
         final InputStream resource1 = resourceStream(resource1Name);
         final InputStream resource2 = resourceStream(resource2Name);
         final int score = getScore(mdx, resource1, resource2, true);
@@ -137,16 +151,16 @@ public final class TestExampleData {
      * @param resource1Name the name of the first resource
      * @param resource2Name the name of the second resource
      * @param expectedScore the expected score of the stream content hashes.
-     * @throws IOException
-     * @throws NoSuchAlgorithmException
-     * @throws NoSuchProviderException
+     * @throws IOException              if an I/O error occurs
+     * @throws NoSuchAlgorithmException if the TLSH algorithm is not registered
+     * @throws NoSuchProviderException  if the provider is not registered
      */
     @ParameterizedTest(name = "{1}-{2} {3}<>{5}")
     @MethodSource("expLenXrefScore")
     public void testExpLenXrefScore(final String resourceGroup, final String bits, final String check,
             final String resource1Name, final String resource2Name, final int expectedScore)
             throws IOException, NoSuchAlgorithmException, NoSuchProviderException {
-        final MessageDigest mdx = MessageDigest.getInstance("TLSH-" + bits + "-" + check, provider);
+        final MessageDigest mdx = MessageDigest.getInstance(formatAlg(bits, check), provider);
         final InputStream resource1 = resourceStream(resource1Name);
         final InputStream resource2 = resourceStream(resource2Name);
         final int score = getScore(mdx, resource1, resource2, true);
@@ -162,16 +176,16 @@ public final class TestExampleData {
      * @param resource1Name the name of the first resource
      * @param resource2Name the name of the second resource
      * @param expectedScore the expected score of the stream content hashes.
-     * @throws IOException
-     * @throws NoSuchAlgorithmException
-     * @throws NoSuchProviderException
+     * @throws IOException              if an I/O error occurs
+     * @throws NoSuchAlgorithmException if the TLSH algorithm is not registered
+     * @throws NoSuchProviderException  if the provider is not registered
      */
     @ParameterizedTest(name = "{1}-{2} {3}")
     @MethodSource("expXLenScore")
     public void testExpXLenScore(final String resourceGroup, final String bits, final String check,
             final String resource1Name, final String resource2Name, final int expectedScore)
             throws IOException, NoSuchAlgorithmException, NoSuchProviderException {
-        final MessageDigest mdx = MessageDigest.getInstance("TLSH-" + bits + "-" + check, provider);
+        final MessageDigest mdx = MessageDigest.getInstance(formatAlg(bits, check), provider);
         final InputStream resource1 = resourceStream(resource1Name);
         final InputStream resource2 = resourceStream(resource2Name);
         final int score = getScore(mdx, resource1, resource2, false);
@@ -187,16 +201,16 @@ public final class TestExampleData {
      * @param resource1Name the name of the first resource
      * @param resource2Name the name of the second resource
      * @param expectedScore the expected score of the stream content hashes.
-     * @throws IOException
-     * @throws NoSuchAlgorithmException
-     * @throws NoSuchProviderException
+     * @throws IOException              if an I/O error occurs
+     * @throws NoSuchAlgorithmException if the TLSH algorithm is not registered
+     * @throws NoSuchProviderException  if the provider is not registered
      */
     @ParameterizedTest(name = "{1}-{2} {3}")
     @MethodSource("expXLenXrefScore")
     public void testExpXLenXrefScore(final String resourceGroup, final String bits, final String check,
             final String resource1Name, final String resource2Name, final int expectedScore)
             throws IOException, NoSuchAlgorithmException, NoSuchProviderException {
-        final MessageDigest mdx = MessageDigest.getInstance("TLSH-" + bits + "-" + check, provider);
+        final MessageDigest mdx = MessageDigest.getInstance(formatAlg(bits, check), provider);
         final InputStream resource1 = resourceStream(resource1Name);
         final InputStream resource2 = resourceStream(resource2Name);
         final int score = getScore(mdx, resource1, resource2, false);
@@ -220,23 +234,20 @@ public final class TestExampleData {
         });
     }
 
-    /** The prefix of the test file resources. */
-    private static final String PATH_PREFIX = "../Testing/";
-
     private InputStream resourceStream(final String resourceName) {
         return getClass().getResourceAsStream(BASE + resourceName);
     }
 
     /**
-     * Provide the lines of the example_data.<<bits>>.<<checksum>>.len_out_EXP
-     * tests.
+     * Provide the lines of the
+     * example_data.&lt;&lt;bits&gt;&gt;.&lt;&lt;checksum&gt;&gt;.len_out_EXP tests.
      * 
      * @return the stream of arguments.
      */
     static Stream<Arguments> expLen() {
-        Stream<String> bits = Stream.of("128", "256");
-        Stream<Arguments> ret = bits.flatMap(b -> Stream.of("1", "3").flatMap(c -> {
-            String name = String.format("example_data.%s.%s.len.out_EXP", b, c);
+        final Stream<String> bits = Stream.of("128", "256");
+        final Stream<Arguments> ret = bits.flatMap(b -> Stream.of("1", "3").flatMap(c -> {
+            final String name = String.format("example_data.%s.%s.len.out_EXP", b, c);
             final Class<?> clazz = TestExampleData.class;
             final InputStream rs = clazz.getResourceAsStream(BASE + "exp/" + name);
             final Stream<Arguments> lines = new BufferedReader(new InputStreamReader(rs, StandardCharsets.UTF_8))
@@ -255,9 +266,9 @@ public final class TestExampleData {
     }
 
     private static Stream<Arguments> score(final String f) {
-        Stream<String> bits = Stream.of("128", "256");
-        Stream<Arguments> ret = bits.flatMap(b -> Stream.of("1", "3").flatMap(c -> {
-            String name = String.format(f, b, c);
+        final Stream<String> bits = Stream.of("128", "256");
+        final Stream<Arguments> ret = bits.flatMap(b -> Stream.of("1", "3").flatMap(c -> {
+            final String name = String.format(f, b, c);
             final Class<?> clazz = TestExampleData.class;
             final InputStream rs = clazz.getResourceAsStream(BASE + "exp/" + name);
             final Stream<Arguments> lines = new BufferedReader(new InputStreamReader(rs, StandardCharsets.UTF_8))
@@ -281,7 +292,8 @@ public final class TestExampleData {
     }
 
     /**
-     * Provide the lines of the example_data.<<bits>>.<<checksum>>.len.scores_EXP
+     * Provide the lines of the
+     * example_data.&lt;&lt;bits&gt;&gt;.&lt;&lt;checksum&gt;&gt;.len.scores_EXP
      * tests.
      * 
      * @return the stream of arguments.
@@ -291,7 +303,8 @@ public final class TestExampleData {
     }
 
     /**
-     * Provide the lines of the example_data.<<bits>>.<<checksum>>.xlen.scores_EXP
+     * Provide the lines of the
+     * example_data.&lt;&lt;bits&gt;&gt;.&lt;&lt;checksum&gt;&gt;.xlen.scores_EXP
      * tests.
      * 
      * @return the stream of arguments.
@@ -301,7 +314,8 @@ public final class TestExampleData {
     }
 
     /**
-     * Provide the lines of the example_data.<<bits>>.<<checksum>>.xlen.scores_EXP
+     * Provide the lines of the
+     * example_data.&lt;&lt;bits&gt;&gt;.&lt;&lt;checksum&gt;&gt;.xlen.scores_EXP
      * tests.
      * 
      * @return the stream of arguments.
@@ -311,7 +325,8 @@ public final class TestExampleData {
     }
 
     /**
-     * Provide the lines of the example_data.<<bits>>.<<checksum>>.xlen.scores_EXP
+     * Provide the lines of the
+     * example_data.&lt;&lt;bits&gt;&gt;.&lt;&lt;checksum&gt;&gt;.xlen.scores_EXP
      * tests.
      * 
      * @return the stream of arguments.

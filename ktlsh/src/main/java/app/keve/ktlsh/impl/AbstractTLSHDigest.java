@@ -17,6 +17,12 @@ package app.keve.ktlsh.impl;
 
 import java.util.Arrays;
 
+/**
+ * Base implementation of the TLSH digester.
+ * 
+ * @author keve
+ *
+ */
 public abstract class AbstractTLSHDigest implements TLSHDigest {
     /** the window length [4-8]. */
     protected final int windowLength;
@@ -50,27 +56,27 @@ public abstract class AbstractTLSHDigest implements TLSHDigest {
     @Override
     public final TLSH digest() {
         // findQuartiles
-        long[] bucketCopy = Arrays.copyOf(aBucket, bucketCount);
+        final long[] bucketCopy = Arrays.copyOf(aBucket, bucketCount);
         Arrays.sort(bucketCopy);
-        int quartile = bucketCount / 4;
+        final int quartile = bucketCount / 4;
         final int p1 = quartile - 1;
-        long q1 = bucketCopy[p1];
-        long q2 = bucketCopy[p1 + quartile];
-        long q3 = bucketCopy[p1 + 2 * quartile];
+        final long q1 = bucketCopy[p1];
+        final long q2 = bucketCopy[p1 + quartile];
+        final long q3 = bucketCopy[p1 + 2 * quartile];
 
         // compress buckets
-        int codeSize = bucketCount / 4;
-        int[] code = new int[codeSize];
+        final int codeSize = bucketCount / 4;
+        final int[] code = new int[codeSize];
         for (int i = 0; i < codeSize; i++) {
             int h = 0;
             for (int j = 0; j < 4; j++) {
-                long k = aBucket[4 * i + j];
+                final long k = aBucket[4 * i + j];
                 if (q3 < k) {
-                    h += 3 << (j * 2);
+                    h += 3 << j * 2;
                 } else if (q2 < k) {
-                    h += 2 << (j * 2);
+                    h += 2 << j * 2;
                 } else if (q1 < k) {
-                    h += 1 << (j * 2);
+                    h += 1 << j * 2;
                 }
             }
             code[i] = h;
@@ -89,13 +95,14 @@ public abstract class AbstractTLSHDigest implements TLSHDigest {
 
     /**
      * Obtain the lag window as an array.
+     * 
      * @return the lag window array.
      */
     protected abstract int[] getLag();
 
     @Override
     public final String toString() {
-        StringBuffer sb = new StringBuffer();
+        final StringBuffer sb = new StringBuffer();
         sb.append("aBucket=\n");
         for (int i = 0; i < aBucket.length; i++) {
             if (aBucket[i] > 0) {
@@ -103,7 +110,7 @@ public abstract class AbstractTLSHDigest implements TLSHDigest {
             }
         }
         sb.append('\n');
-        int[] lag = getLag();
+        final int[] lag = getLag();
         sb.append("lag=").append(Arrays.toString(lag)).append('\n');
 
         sb.append("count=").append(count).append('\n');

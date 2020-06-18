@@ -24,6 +24,12 @@ import com.trendmicro.tlsh.TlshCreator;
 
 import app.keve.ktlsh.TLSHUtil;
 
+/**
+ * The Service Provider for the TM TLSH implementation.
+ * 
+ * @author keve
+ *
+ */
 public final class TLSHMessageDigestSpiTM extends MessageDigestSpi {
     /** The underlying TlshCreator r implementation. */
     private final TlshCreator impl;
@@ -36,7 +42,7 @@ public final class TLSHMessageDigestSpiTM extends MessageDigestSpi {
 
     TLSHMessageDigestSpiTM(final BucketOption bucketOption, final ChecksumOption checksumOption) {
         impl = new TlshCreator(bucketOption, checksumOption);
-        int l = (bucketOption.getBucketCount() / 2) + (checksumOption.getChecksumLength() * 2) + 4;
+        final int l = bucketOption.getBucketCount() / 2 + checksumOption.getChecksumLength() * 2 + 4;
         this.digestLength = l / 2;
     }
 
@@ -57,7 +63,7 @@ public final class TLSHMessageDigestSpiTM extends MessageDigestSpi {
 
     @Override
     protected byte[] engineDigest() {
-        Tlsh hash = impl.getHash(true);
+        final Tlsh hash = impl.getHash(true);
         impl.reset();
         return TLSHUtil.hexToBytes(hash.getEncoded());
     }

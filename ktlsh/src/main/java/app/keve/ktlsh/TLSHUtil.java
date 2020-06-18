@@ -24,7 +24,22 @@ import app.keve.ktlsh.impl.TLSH;
 import app.keve.ktlsh.spi.KProvider;
 import app.keve.ktlsh.spi.TMProvider;
 
+/**
+ * Utility class to perform basic operations on TLSH hashes.
+ * 
+ * @author keve
+ *
+ */
 public final class TLSHUtil {
+    /**
+     * Lookup table for lower case hex characters.
+     */
+    private static final byte[] HEX_LC = "0123456789abcdef".getBytes(StandardCharsets.US_ASCII);
+    /**
+     * Lookup table for upper case hex characters.
+     */
+    private static final byte[] HEX_UC = "0123456789ABCDEF".getBytes(StandardCharsets.US_ASCII);
+
     private TLSHUtil() {
     }
 
@@ -50,8 +65,8 @@ public final class TLSHUtil {
      * Dynamically register the K and TM providers.
      */
     public static void registerProviders() {
-        ServiceLoader<Provider> sl = ServiceLoader.load(java.security.Provider.class);
-        for (Provider p : sl) {
+        final ServiceLoader<Provider> sl = ServiceLoader.load(java.security.Provider.class);
+        for (final Provider p : sl) {
             if (p.getName().equals(KProvider.NAME) || p.getName().equals(TMProvider.NAME)) {
                 Security.addProvider(p);
             }
@@ -65,22 +80,13 @@ public final class TLSHUtil {
      * @return the byte buffer
      */
     public static byte[] hexToBytes(final CharSequence hex) {
-        int len = hex.length();
-        byte[] data = new byte[len / 2];
+        final int len = hex.length();
+        final byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
             data[i / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4) + Character.digit(hex.charAt(i + 1), 16));
         }
         return data;
     }
-
-    /**
-     * Lookup table for lower case hex characters.
-     */
-    private static final byte[] HEX_LC = "0123456789abcdef".getBytes(StandardCharsets.US_ASCII);
-    /**
-     * Lookup table for upper case hex characters.
-     */
-    private static final byte[] HEX_UC = "0123456789ABCDEF".getBytes(StandardCharsets.US_ASCII);
 
     /**
      * Convert a byte buffer to lower case hex character string.
@@ -89,9 +95,9 @@ public final class TLSHUtil {
      * @return the hex string
      */
     public static String bytesToHex(final byte[] bytes) {
-        byte[] hexChars = new byte[bytes.length * 2];
+        final byte[] hexChars = new byte[bytes.length * 2];
         for (int j = 0; j < bytes.length; j++) {
-            int v = bytes[j] & 0xFF;
+            final int v = bytes[j] & 0xFF;
             hexChars[j * 2] = HEX_LC[v >>> 4];
             hexChars[j * 2 + 1] = HEX_LC[v & 0x0F];
         }
@@ -105,9 +111,9 @@ public final class TLSHUtil {
      * @return the hex string
      */
     public static String bytesToHEX(final byte[] bytes) {
-        byte[] hexChars = new byte[bytes.length * 2];
+        final byte[] hexChars = new byte[bytes.length * 2];
         for (int j = 0; j < bytes.length; j++) {
-            int v = bytes[j] & 0xFF;
+            final int v = bytes[j] & 0xFF;
             hexChars[j * 2] = HEX_UC[v >>> 4];
             hexChars[j * 2 + 1] = HEX_UC[v & 0x0F];
         }
