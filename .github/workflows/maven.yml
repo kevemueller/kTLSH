@@ -18,7 +18,6 @@ jobs:
             - windows-latest
             java:
             - 11
-            - 12
             - 13
       name: Java ${{matrix.java}} build
       steps:

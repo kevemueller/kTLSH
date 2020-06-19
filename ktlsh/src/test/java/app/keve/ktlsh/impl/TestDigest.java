@@ -29,6 +29,7 @@ import com.trendmicro.tlsh.Tlsh;
 import com.trendmicro.tlsh.TlshCreator;
 
 import app.keve.ktlsh.TLSHUtil;
+import app.keve.ktlsh.Util;
 
 /**
  * Test digester operation between TM and K implementations.
@@ -54,7 +55,7 @@ public final class TestDigest {
 
     /** Construct the test instance. */
     public TestDigest() throws NoSuchAlgorithmException {
-        rnd = SecureRandom.getInstance("NativePRNGNonBlocking");
+        rnd = Util.rnd();
     }
 
     /**

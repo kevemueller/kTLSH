@@ -143,7 +143,7 @@ public final class TestProvider {
         final MessageDigest mdTLSH = MessageDigest.getInstance(TLSH, provider);
         assertNotNull(mdTLSH);
 
-        final SecureRandom rnd = SecureRandom.getInstance("NativePRNGNonBlocking");
+        final SecureRandom rnd = Util.rnd();
         final byte[] buf = new byte[rnd.nextInt(MEDIUM_SIZE)];
         rnd.nextBytes(buf);
         final byte[] hash1 = mdTLSH.digest(buf);
