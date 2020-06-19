@@ -19,13 +19,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -53,65 +49,12 @@ public final class TestDigest {
     /** Base directory of the unit test data. */
     private static final String BASE = "/tlsh/Testing/";
 
-    /** Internal fields of TlshCreator. */
-    private static List<Field> tlshCreatorFields;
-    /** Internal fields of Tlsh. */
-    private static List<Field> tlshFields;
-    static {
-        tlshCreatorFields = new ArrayList<Field>();
-        for (final Field f : TlshCreator.class.getDeclaredFields()) {
-            f.setAccessible(true);
-            tlshCreatorFields.add(f);
-        }
-        tlshFields = new ArrayList<Field>();
-        for (final Field f : Tlsh.class.getDeclaredFields()) {
-            f.setAccessible(true);
-            tlshFields.add(f);
-        }
-    }
-
     /** The source of randomness. */
     private final SecureRandom rnd;
 
     /** Construct the test instance. */
     public TestDigest() throws NoSuchAlgorithmException {
         rnd = SecureRandom.getInstance("NativePRNGNonBlocking");
-    }
-
-    private void dump(final List<Field> fields, final Object c) {
-        try {
-            for (final Field f : fields) {
-                if (f.getType().isArray()) {
-                    final Object a = f.get(c);
-                    if (a instanceof long[]) {
-                        final long[] la = (long[]) a;
-                        System.out.printf("%s[%d]=\n", f.getName(), la.length);
-                        for (int i = 0; i < la.length; i++) {
-                            if (la[i] > 0) {
-                                System.out.printf("%d:%d\n", i, la[i]);
-                            }
-                        }
-                    } else if (a instanceof int[]) {
-                        final int[] ia = (int[]) a;
-                        System.out.printf("%s[%d]=%s\n", f.getName(), ia.length, Arrays.toString(ia));
-                    } else {
-                        System.out.printf("%s=%s\n", f.getName(), Arrays.toString((Object[]) a));
-                    }
-                } else {
-                    System.out.printf("%s=%s\n", f.getName(), f.get(c));
-                }
-            }
-        } catch (final IllegalAccessException e) {
-            throw new IllegalArgumentException(e);
-        }
-    }
-
-    private void dump(final TlshCreator c) {
-        dump(tlshCreatorFields, c);
-    }
-
-    private void dump(final Tlsh tTLSH) {
-        dump(tlshFields, tTLSH);
     }
 
     /**
@@ -128,7 +71,7 @@ public final class TestDigest {
             System.out.println(kd);
 
             td.update(new byte[] {i});
-            dump(td);
+            TMTestUtil.dump(td);
 
             System.out.println("---");
         }
@@ -151,12 +94,12 @@ public final class TestDigest {
         td.update(buf);
 
         System.out.println(kd);
-        dump(td);
+        TMTestUtil.dump(td);
 
         final TLSH kTLSH = kd.digest();
         final Tlsh tTLSH = td.getHash();
         System.out.println(kTLSH);
-        dump(tTLSH);
+        TMTestUtil.dump(tTLSH);
 
         final String kHash = TLSHUtil.encoded(kTLSH.pack());
         final String tHash = tTLSH.toString();
@@ -185,12 +128,12 @@ public final class TestDigest {
         }
 
         System.out.println(kd);
-        dump(td);
+        TMTestUtil.dump(td);
 
         final TLSH kTLSH = kd.digest();
         final Tlsh tTLSH = td.getHash();
         System.out.println(kTLSH);
-        dump(tTLSH);
+        TMTestUtil.dump(tTLSH);
 
         final String kHash = TLSHUtil.encoded(kTLSH.pack());
         final String tHash = tTLSH.toString();
@@ -222,12 +165,12 @@ public final class TestDigest {
         }
 
         System.out.println(kd);
-        dump(td);
+        TMTestUtil.dump(td);
 
         final TLSH kTLSH = kd.digest();
         final Tlsh tTLSH = td.getHash();
         System.out.println(kTLSH);
-        dump(tTLSH);
+        TMTestUtil.dump(tTLSH);
 
         final String kHash = TLSHUtil.encoded(kTLSH.pack());
         final String tHash = tTLSH.toString();
@@ -259,12 +202,12 @@ public final class TestDigest {
         }
 
         System.out.println(kd);
-        dump(td);
+        TMTestUtil.dump(td);
 
         final TLSH kTLSH = kd.digest();
         final Tlsh tTLSH = td.getHash();
         System.out.println(kTLSH);
-        dump(tTLSH);
+        TMTestUtil.dump(tTLSH);
 
         final String kHash = TLSHUtil.encoded(kTLSH.pack());
         final String tHash = tTLSH.toString();
@@ -292,12 +235,12 @@ public final class TestDigest {
         td.update(buf);
 
         System.out.println(kd);
-        dump(td);
+        TMTestUtil.dump(td);
 
         final TLSH kTLSH = kd.digest();
         final Tlsh tTLSH = td.getHash();
         System.out.println(kTLSH);
-        dump(tTLSH);
+        TMTestUtil.dump(tTLSH);
 
         final String kHash = TLSHUtil.encoded(kTLSH.pack());
         final String tHash = tTLSH.toString();

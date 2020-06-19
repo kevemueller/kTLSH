@@ -94,7 +94,9 @@
     <module name="SummaryJavadoc"/>
     <module name="AtclauseOrder"/>
     <module name="JavadocBlockTagLocation"/>
-    <module name="JavadocParagraph"/>
+    <module name="JavadocParagraph">
+      <property name="allowNewlineParagraph" value="false"/>
+    </module>
     <module name="SingleLineJavadoc"/>
     <module name="AbstractClassName"/>
     <module name="AbbreviationAsWordInName">

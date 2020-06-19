@@ -24,6 +24,7 @@ import java.security.DigestInputStream;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -46,6 +47,7 @@ public class TestLargeFile {
      * @throws IOException              if an I/O error occurs
      */
     @Test
+    @Disabled
     public void testLargeFile() throws GeneralSecurityException, IOException {
         final MessageDigest md = MessageDigest.getInstance("TLSH", TLSHUtil.providerNameK());
         final Path p = Path.of("/Users/keve/Documents/set/Win10_1809Oct_EnglishInternational_x64.iso");
