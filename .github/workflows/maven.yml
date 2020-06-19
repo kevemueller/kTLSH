@@ -19,7 +19,7 @@ jobs:
             java:
             - 11
             - 13
-      name: Java ${{matrix.java}} build
+      name: Java ${{matrix.java}} build on ${{matrix.os}}
       steps:
       -  uses: actions/checkout@v2
          with:

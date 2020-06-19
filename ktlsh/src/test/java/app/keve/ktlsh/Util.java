@@ -35,7 +35,7 @@ public final class Util {
      * @throws NoSuchAlgorithmException if none can be found
      */
     public static SecureRandom rnd() throws NoSuchAlgorithmException {
-        final String os = System.getProperty("os.name");
+        final String os = System.getProperty("os.name").toLowerCase();
         return os.contains("win") ? SecureRandom.getInstanceStrong()
                 : SecureRandom.getInstance("NativePRNGNonBlocking");
     }
