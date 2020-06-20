@@ -1,6 +1,8 @@
 # kTLSH
 A fresh look at implementing TLSH in Java.
 
+![Java CI with Maven](https://github.com/kevemueller/kTLSH/workflows/Java%20CI%20with%20Maven/badge.svg)
+
 ## Purpose
 This source implements the [TLSH - Trend Locality Sensitive Hash](https://github.com/trendmicro/tlsh) method in Java language.
 
