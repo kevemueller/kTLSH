@@ -61,12 +61,15 @@
 						<id>validate</id>
 						<phase>verify</phase>
 						<configuration>
+							<propertyExpansion>config_loc=${basedir}</propertyExpansion>
 							<configLocation>checkstyle.xml</configLocation>
 							<consoleOutput>true</consoleOutput>
 							<failsOnError>true</failsOnError>
 							<linkXRef>false</linkXRef>
 							<maxAllowedViolations>10</maxAllowedViolations>
 							<failOnViolation>true</failOnViolation>
+							<includeResources>false</includeResources>
+							<includeTestResources>false</includeTestResources>
 						</configuration>
 						<goals>
 							<goal>check</goal>
