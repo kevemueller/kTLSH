@@ -41,7 +41,7 @@
 
 
 	<properties>
-			<projectRoot>${basedir}/..</projectRoot>
+		<projectRoot>${basedir}/..</projectRoot>
 	</properties>
 
 	<repositories>
@@ -64,10 +64,20 @@
 	</dependencies>
 	<build>
 		<plugins>
-
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test-jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
-		<resources>
-			<resource>
+		<testResources>
+			<testResource>
 				<directory>src/test/resources</directory>
 				<includes>
 					<include>
@@ -75,7 +85,7 @@
 					</include>
 				</includes>
 				<filtering>false</filtering>
-			</resource>
-		</resources>
+			</testResource>
+		</testResources>
 	</build>
 </project>

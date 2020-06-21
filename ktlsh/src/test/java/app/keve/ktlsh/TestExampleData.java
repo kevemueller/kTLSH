@@ -222,7 +222,7 @@ public final class TestExampleData {
      * 
      * @return the stream of arguments.
      */
-    static Stream<Arguments> exampleLines() {
+    public static Stream<Arguments> exampleLines() {
         final Class<?> clazz = TestExampleData.class;
         final InputStream rs = clazz.getResourceAsStream(BASE + "example_data_col_swap.csv");
         final Stream<String> lines = new BufferedReader(new InputStreamReader(rs, StandardCharsets.UTF_8)).lines();
@@ -244,7 +244,7 @@ public final class TestExampleData {
      * 
      * @return the stream of arguments.
      */
-    static Stream<Arguments> expLen() {
+    public static Stream<Arguments> expLen() {
         final Stream<String> bits = Stream.of("128", "256");
         final Stream<Arguments> ret = bits.flatMap(b -> Stream.of("1", "3").flatMap(c -> {
             final String name = String.format("example_data.%s.%s.len.out_EXP", b, c);
@@ -298,7 +298,7 @@ public final class TestExampleData {
      * 
      * @return the stream of arguments.
      */
-    static Stream<Arguments> expLenScore() {
+    public static Stream<Arguments> expLenScore() {
         return score("example_data.%s.%s.len.scores_EXP");
     }
 
@@ -309,7 +309,7 @@ public final class TestExampleData {
      * 
      * @return the stream of arguments.
      */
-    static Stream<Arguments> expLenXrefScore() {
+    public static Stream<Arguments> expLenXrefScore() {
         return score("example_data.%s.%s.len.xref.scores_EXP");
     }
 
@@ -320,7 +320,7 @@ public final class TestExampleData {
      * 
      * @return the stream of arguments.
      */
-    static Stream<Arguments> expXLenScore() {
+    public static Stream<Arguments> expXLenScore() {
         return score("example_data.%s.%s.xlen.scores_EXP");
     }
 
@@ -331,7 +331,7 @@ public final class TestExampleData {
      * 
      * @return the stream of arguments.
      */
-    static Stream<Arguments> expXLenXrefScore() {
+    public static Stream<Arguments> expXLenXrefScore() {
         return score("example_data.%s.%s.xlen.xref.scores_EXP");
     }
 
