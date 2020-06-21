@@ -3,16 +3,45 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>app.keve.ktlsh</groupId>
 	<artifactId>ktlsh-parent</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>kTLSH (parent)</name>
+	<description>A fresh look at implementing TLSH in Java.</description>
+	<url>https://ktlsh.keve.app</url>
+	<inceptionYear>2020</inceptionYear>
+
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Keve Müller</name>
+			<email>ktlsh@keve.app</email>
+			<organization>Keve</organization>
+			<organizationUrl>https://keve.app</organizationUrl>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:git://github.com/kevemueller/kTLSH.git</connection>
+		<developerConnection>scm:git:ssh://github.com:kevemueller/kTLSH.git</developerConnection>
+		<url>http://github.com/kevemueller/kTLSH/tree/master</url>
+	</scm>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<ktlsh.version>0.0.1-SNAPSHOT</ktlsh.version>
-		<junit.version>5.6.2</junit.version>
+		<projectRoot>${basedir}</projectRoot>
 	</properties>
 
 	<modules>
@@ -35,7 +64,7 @@
 						<configuration>
 							<rules>
 								<requireMavenVersion>
-									<version>[3.6.3,)</version>
+									<version>[3.6.0,)</version>
 								</requireMavenVersion>
 							</rules>
 						</configuration>
@@ -44,24 +73,144 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.1.0</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.0.0-M4</version>
-				<configuration>
-					<useSystemClassLoader>false</useSystemClassLoader>
-				</configuration>
+				<artifactId>maven-checkstyle-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>3.1.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>3.1.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>3.2.4</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>3.0.0-M1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>3.0.0-M1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.2.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.9.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.8.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>3.0.0-M4</version>
+					<configuration>
+						<useSystemClassLoader>false</useSystemClassLoader>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>3.2.1</version>
+					<executions>
+						<execution>
+							<id>attach-sources</id>
+							<goals>
+								<goal>jar-no-fork</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>3.2.0</version>
+					<executions>
+						<execution>
+							<id>attach-javadocs</id>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>1.6</version>
+					<executions>
+						<execution>
+							<id>sign-artifacts</id>
+							<phase>verify</phase>
+							<goals>
+								<goal>sign</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-checkstyle-plugin</artifactId>
+					<version>3.1.1</version>
+					<executions>
+						<execution>
+							<id>validate</id>
+							<phase>verify</phase>
+							<configuration>
+								<propertyExpansion>config_loc=${projectRoot}</propertyExpansion>
+								<configLocation>checkstyle.xml</configLocation>
+								<consoleOutput>true</consoleOutput>
+								<failsOnError>true</failsOnError>
+								<linkXRef>false</linkXRef>
+								<maxAllowedViolations>10</maxAllowedViolations>
+								<failOnViolation>true</failOnViolation>
+								<includeResources>false</includeResources>
+								<includeTestResources>false</includeTestResources>
+							</configuration>
+							<goals>
+								<goal>check</goal>
+							</goals>
+						</execution>
+					</executions>
+					<dependencies>
+						<dependency>
+							<groupId>com.puppycrawl.tools</groupId>
+							<artifactId>checkstyle</artifactId>
+							<version>8.33</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter</artifactId>
+				<version>5.6.2</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<reporting>
 		<plugins>
 			<plugin>
@@ -77,8 +226,12 @@
 						</reports>
 					</reportSet>
 				</reportSets>
+				<!-- Usage: -->
+				<!-- mvn versions:display-dependency-updates -->
+				<!-- mvn versions:display-plugin-updates -->
+				<!-- mvn versions:display-property-updates -->
+				<!-- TODO: fix reports! -->
 			</plugin>
 		</plugins>
 	</reporting>
-	<packaging>pom</packaging>
 </project>
