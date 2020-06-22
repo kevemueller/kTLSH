@@ -12,7 +12,7 @@ While there are already Java implementations of the method, the current one was 
 - Performant
 
 ## Usage
-The module is built with maven.
+The module is built with maven. Details on the maven build are at the [kTLSH maven site](maven-site/).
 
 Usage follows the pattern used by the other hash methods available in Java.
 

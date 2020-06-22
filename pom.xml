@@ -11,7 +11,7 @@
 
 	<name>kTLSH (parent)</name>
 	<description>A fresh look at implementing TLSH in Java.</description>
-	<url>https://ktlsh.keve.app</url>
+	<url>https://ktlsh.keve.app/maven-site</url>
 	<inceptionYear>2020</inceptionYear>
 
 	<licenses>
@@ -35,6 +35,13 @@
 		<developerConnection>scm:git:ssh://github.com:kevemueller/kTLSH.git</developerConnection>
 		<url>http://github.com/kevemueller/kTLSH/tree/master</url>
 	</scm>
+
+	<distributionManagement>
+		<site>
+			<id>ktlsh.gh-pages</id>
+			<url>https://ktlsh.keve.app/maven-site/</url>
+		</site>
+	</distributionManagement>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -74,6 +81,41 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-site-static</id>
+						<!-- here the phase you need -->
+						<phase>site</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/staging</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}</directory>
+									<include>README.md</include>
+								</resource>
+								<resource>
+									<directory>${basedir}/src/gh-pages</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-scm-publish-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+					<pubScmUrl>scm:git:https://github.com/kevemueller/kTLSH.git</pubScmUrl>
+					<scmBranch>gh-pages</scmBranch>
+					<tryUpdate>true</tryUpdate>
+				</configuration>
 			</plugin>
 		</plugins>
 		<pluginManagement>
@@ -132,6 +174,9 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
 					<version>3.9.0</version>
+					<configuration>
+						<topSiteURL>https://ktlsh.keve.app/</topSiteURL>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
