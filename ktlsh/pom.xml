@@ -14,42 +14,10 @@
 
 	<name>kTLSH</name>
 	<description>A fresh look at implementing TLSH in Java.</description>
-	<url>https://ktlsh.keve.app</url>
-	<inceptionYear>2020</inceptionYear>
-
-	<licenses>
-		<license>
-			<name>The Apache License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-		</license>
-	</licenses>
-
-	<developers>
-		<developer>
-			<name>Keve Müller</name>
-			<email>ktlsh@keve.app</email>
-			<organization>Keve</organization>
-			<organizationUrl>https://keve.app</organizationUrl>
-		</developer>
-	</developers>
-
-	<scm>
-		<connection>scm:git:git://github.com/kevemueller/kTLSH.git</connection>
-		<developerConnection>scm:git:ssh://github.com:kevemueller/kTLSH.git</developerConnection>
-		<url>http://github.com/kevemueller/kTLSH/tree/master</url>
-	</scm>
-
 
 	<properties>
 		<projectRoot>${basedir}/..</projectRoot>
 	</properties>
-
-	<repositories>
-		<repository>
-			<id>jcenter</id>
-			<url>https://jcenter.bintray.com/</url>
-		</repository>
-	</repositories>
 
 	<dependencies>
 		<dependency>

@@ -14,31 +14,7 @@
 
 	<name>kTLSH JMH benchmark</name>
 
-	<description>A fresh look at implementing TLSH in Java.</description>
-	<url>https://ktlsh.keve.app</url>
-	<inceptionYear>2020</inceptionYear>
-
-	<licenses>
-		<license>
-			<name>The Apache License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-		</license>
-	</licenses>
-
-	<developers>
-		<developer>
-			<name>Keve Müller</name>
-			<email>ktlsh@keve.app</email>
-			<organization>Keve</organization>
-			<organizationUrl>https://keve.app</organizationUrl>
-		</developer>
-	</developers>
-
-	<scm>
-		<connection>scm:git:git://github.com/kevemueller/kTLSH.git</connection>
-		<developerConnection>scm:git:ssh://github.com:kevemueller/kTLSH.git</developerConnection>
-		<url>http://github.com/kevemueller/kTLSH/tree/master</url>
-	</scm>
+	<description>JMH based benchmarking of kTLSH implementation.</description>
 
 	<properties>
 		<!-- JMH version to use with this project. -->
@@ -82,6 +58,25 @@
 					<compilerVersion>${javac.target}</compilerVersion>
 					<source>${javac.target}</source>
 					<target>${javac.target}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Automatic-Module-Name>app.keve.ktlsh.benchmarks</Automatic-Module-Name>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<detectJavaApiLink>false</detectJavaApiLink>
+					<excludePackageNames>app.keve.ktlsh.benchmarks.generated</excludePackageNames>
 				</configuration>
 			</plugin>
 			<plugin>

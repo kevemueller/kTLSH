@@ -41,6 +41,14 @@
 			<id>ktlsh.gh-pages</id>
 			<url>https://ktlsh.keve.app/maven-site/</url>
 		</site>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
 	</distributionManagement>
 
 	<properties>
@@ -55,6 +63,28 @@
 		<module>ktlsh</module>
 		<module>ktlsh-jmh</module>
 	</modules>
+
+	<profiles>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<build>
 		<plugins>
@@ -83,11 +113,21 @@
 				<artifactId>maven-checkstyle-plugin</artifactId>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<goals>
+					<goal>aggregate</goal>
+				</goals>
+				<configuration>
+					<excludePackageNames>app.keve.ktlsh.benchmarks.generated</excludePackageNames>
+					<reportOutputDirectory>${project.build.directory}/staging/apidocs</reportOutputDirectory>
+				</configuration>
+			</plugin>
+			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
 				<executions>
 					<execution>
 						<id>copy-site-static</id>
-						<!-- here the phase you need -->
 						<phase>site</phase>
 						<goals>
 							<goal>copy-resources</goal>
@@ -116,8 +156,11 @@
 					<scmBranch>gh-pages</scmBranch>
 					<tryUpdate>true</tryUpdate>
 				</configuration>
+				<!-- Usage: -->
+				<!-- mvn clean package site site:stage javadoc:aggregate scm-publish:publish-scm -->
 			</plugin>
 		</plugins>
+
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -285,6 +328,12 @@
 				<artifactId>maven-project-info-reports-plugin</artifactId>
 				<version>3.1.0</version>
 			</plugin>
+			<!-- cannot build javadoc:aggregate as part of site -->
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-javadoc-plugin</artifactId> 
+				<version>3.2.0</version> <reportSets> <reportSet> <id>aggregate</id> <inherited>false</inherited> 
+				<reports> <report>aggregate</report> </reports> </reportSet> <reportSet> 
+				<id>default</id> <reports> <report>javadoc</report> </reports> </reportSet> 
+				</reportSets> </plugin> -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>versions-maven-plugin</artifactId>
@@ -306,4 +355,12 @@
 			</plugin>
 		</plugins>
 	</reporting>
+
+
+	<repositories>
+		<repository>
+			<id>jcenter</id>
+			<url>https://jcenter.bintray.com/</url>
+		</repository>
+	</repositories>
 </project>
