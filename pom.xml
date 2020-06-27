@@ -136,6 +136,7 @@
 						</additionalDependency>
 					</additionalDependencies>
 				</configuration>
+				<inherited>false</inherited>
 			</plugin>
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
