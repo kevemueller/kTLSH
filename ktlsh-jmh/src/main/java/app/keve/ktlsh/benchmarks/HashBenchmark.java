@@ -16,6 +16,7 @@
 package app.keve.ktlsh.benchmarks;
 
 import java.security.GeneralSecurityException;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -30,6 +31,7 @@ import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 
 import app.keve.ktlsh.TLSHUtil;
+import app.keve.ktlsh.testutil.Util;
 
 /**
  * Hash benchmarks.
@@ -46,7 +48,7 @@ public class HashBenchmark {
     /** The KiB multiplier. */
     private static final int KIB = 1024;
     static {
-        TLSHUtil.registerProviders();
+        Util.registerProvider();
     }
 
     /**
@@ -122,7 +124,7 @@ public class HashBenchmark {
     @Benchmark
     @OperationsPerInvocation(32)
     public void testTMSmall32KiB(final MyState state) throws GeneralSecurityException {
-        final MessageDigest md = MessageDigest.getInstance(TLSH_ALGNAME, TLSHUtil.providerNameTM());
+        final MessageDigest md = MessageDigest.getInstance(TLSH_ALGNAME, Util.providerNameTM());
         test(md, state.getSmallBuf32KiB());
     }
 
@@ -161,7 +163,7 @@ public class HashBenchmark {
     @Benchmark
     @OperationsPerInvocation(16 * KIB)
     public void testTMLarge16MiB(final MyState state) throws GeneralSecurityException {
-        final MessageDigest md = MessageDigest.getInstance(TLSH_ALGNAME, TLSHUtil.providerNameTM());
+        final MessageDigest md = MessageDigest.getInstance(TLSH_ALGNAME, Util.providerNameTM());
         test(md, state.getLargeBuf16MiB());
     }
 

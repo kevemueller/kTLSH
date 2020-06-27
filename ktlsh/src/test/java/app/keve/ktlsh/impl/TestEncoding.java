@@ -36,7 +36,7 @@ import com.trendmicro.tlsh.Tlsh;
 import com.trendmicro.tlsh.TlshCreator;
 
 import app.keve.ktlsh.TLSHUtil;
-import app.keve.ktlsh.Util;
+import app.keve.ktlsh.testutil.Util;
 
 /**
  * Test the packing and unpacking of TLSH hashes.
@@ -73,7 +73,7 @@ public final class TestEncoding {
     private static final List<TLSH> SAMPLE_TLSH;
 
     static {
-        TLSHUtil.registerProviders();
+        TLSHUtil.registerProvider();
         try {
             final SecureRandom rnd = Util.rnd();
             SAMPLE_DATA = new SampleData[256];

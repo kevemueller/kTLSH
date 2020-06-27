@@ -36,7 +36,7 @@ import org.junit.jupiter.api.Test;
 public class TestLargeFile {
 
     static {
-        TLSHUtil.registerProviders();
+        TLSHUtil.registerProvider();
     }
 
     /**

@@ -13,10 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package app.keve.ktlsh;
+package app.keve.ktlsh.testutil;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.Security;
+
+import app.keve.ktlsh.TLSHUtil;
+import app.keve.ktlsh.spi.TMProvider;
 
 /**
  * Utility functions for tests.
@@ -26,6 +30,23 @@ import java.security.SecureRandom;
  */
 public final class Util {
     private Util() {
+    }
+
+    /**
+     * Register K provider as well as TM provider.
+     */
+    public static void registerProvider() {
+        TLSHUtil.registerProvider();
+        Security.addProvider(new TMProvider());
+    }
+
+    /**
+     * Return the name of the TM provider.
+     * 
+     * @return the name
+     */
+    public static String providerNameTM() {
+        return TMProvider.NAME;
     }
 
     /**

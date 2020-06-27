@@ -22,7 +22,6 @@ import java.util.ServiceLoader;
 
 import app.keve.ktlsh.impl.TLSH;
 import app.keve.ktlsh.spi.KProvider;
-import app.keve.ktlsh.spi.TMProvider;
 
 /**
  * Utility class to perform basic operations on TLSH hashes.
@@ -53,21 +52,12 @@ public final class TLSHUtil {
     }
 
     /**
-     * Obtain the name of the TM provider.
-     * 
-     * @return the name of the TM provider.
+     * Dynamically register the K provider.
      */
-    public static String providerNameTM() {
-        return TMProvider.NAME;
-    }
-
-    /**
-     * Dynamically register the K and TM providers.
-     */
-    public static void registerProviders() {
+    public static void registerProvider() {
         final ServiceLoader<Provider> sl = ServiceLoader.load(java.security.Provider.class);
         for (final Provider p : sl) {
-            if (p.getName().equals(KProvider.NAME) || p.getName().equals(TMProvider.NAME)) {
+            if (p.getName().equals(KProvider.NAME)) {
                 Security.addProvider(p);
             }
         }

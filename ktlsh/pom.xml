@@ -21,17 +21,31 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.trendmicro</groupId>
-			<artifactId>tlsh</artifactId>
-			<version>3.7.1</version>
-		</dependency>
-		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
 		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>3.2.0</version>
+				<executions>
+					<execution>
+						<id>add-tlsh-source</id>
+						<phase>generate-test-sources</phase>
+						<goals>
+							<goal>add-test-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								src/test/resources/tlsh/java/src/main
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -48,6 +62,7 @@
 			<testResource>
 				<directory>src/test/resources</directory>
 				<includes>
+					<include>tlsh/*.txt</include>
 					<include>
 					tlsh/Testing/**
 					</include>

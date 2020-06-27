@@ -12,17 +12,29 @@ While there are already Java implementations of the method, the current one was 
 - Performant
 
 ## Usage
-The module is built with maven. Details on the maven build are at the [kTLSH maven site](maven-site/).
+The module is built with maven. Details on the maven build are at the [kTLSH maven site](https://ktlsh.keve.app/maven-site/). There are also [API docs](https://ktlsh.keve.app/apidocs/) 
 
 Usage follows the pattern used by the other hash methods available in Java.
 
 ```
 MessageDigest tlshDigest = MessageDigest.getInstance("TLSH");
+
 tlshDigest.update("Hello world!".getBytes());
-byte[] hash = tlshDigest.digest();
+final byte[] hash1 = tlshDigest.digest();
+final String encoded1 = TLSHUtil.encoded(hash1);
+
+final byte[] hash2 = tlshDigest.digest("Goodbye Cruel World".getBytes());
+final String encoded2 = TLSHUtil.encoded(hash2);
+
+final int score = TLSHUtil.score(hash1, hash2, false);
 ```
 
 All published TLSH algorithm variants are supported using the following name selector `TLSH-(128|256)-(1|3)/[4-8]`, where `128` or `256` is the number of buckets, `1` or `3`  is the number of checksum bytes and the optional `/4` to `/8` suffix is the window size.
+That is the full list of algorithms is:
+- TLSH-128-1/4, TLSH-128-1/5 aka TLSH-128-1 aka TLSH, ..., TLSH-128-1/8
+- TLSH-128-3/4, TLSH-128-3/5 aka TLSH-128-3, ..., TLSH-128-3/8
+- TLSH-256-1/4, TLSH-256-1/5 aka TLSH-256-1, ..., TLSH-256-1/8
+- TLSH-256-3/4, TLSH-256-3/5 aka TLSH-256-3, ..., TLSH-256-3/8
 
 The module only exports the `TLSHUtil` utility class. It contains the  `score` utility function that computes the score difference between the provided two hashes as well as formatters for the hexadecimal representation of the TLSH hash number.
 

@@ -133,13 +133,14 @@ public final class TestLenLog {
                 len--;
             }
             if (i < 256) {
-                System.out.printf(", /* %d  */ %d%s\n", i - 1, len, len > Integer.MAX_VALUE ? "L" : "");
+                System.out.printf(", /* %d  */ %d%s", i - 1, len, len > Integer.MAX_VALUE ? "L" : "");
             } else {
-                System.out.printf(", /* %d  */ /* %dL */ Long.MAX_VALUE\n", i - 1, len);
+                System.out.printf(", /* %d  */ /* %dL */ Long.MAX_VALUE", i - 1, len);
                 len = Long.MAX_VALUE;
             }
             topval[i - 1] = len;
         }
+        System.out.println();
         assertArrayEquals(TLSH.TOPVAL, topval);
     }
 

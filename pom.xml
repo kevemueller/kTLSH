@@ -109,6 +109,12 @@
 				</executions>
 			</plugin>
 			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<!-- Usage: -->
+				<!-- mvn -P release clean verify deploy -->
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
 			</plugin>
@@ -121,6 +127,14 @@
 				<configuration>
 					<excludePackageNames>app.keve.ktlsh.benchmarks.generated</excludePackageNames>
 					<reportOutputDirectory>${project.build.directory}/staging/apidocs</reportOutputDirectory>
+					<additionalDependencies>
+						<additionalDependency>
+							<groupId>app.keve.ktlsh</groupId>
+							<artifactId>ktlsh</artifactId>
+							<version>${ktlsh.version}</version>
+							<classifier>tests</classifier>
+						</additionalDependency>
+					</additionalDependencies>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -157,7 +171,7 @@
 					<tryUpdate>true</tryUpdate>
 				</configuration>
 				<!-- Usage: -->
-				<!-- mvn clean package site site:stage javadoc:aggregate scm-publish:publish-scm -->
+				<!-- mvn clean verify package site site:stage javadoc:aggregate scm-publish:publish-scm -->
 			</plugin>
 		</plugins>
 
@@ -275,6 +289,18 @@
 					</executions>
 				</plugin>
 				<plugin>
+					<groupId>org.sonatype.plugins</groupId>
+					<artifactId>nexus-staging-maven-plugin</artifactId>
+					<version>1.6.8</version>
+					<extensions>true</extensions>
+					<configuration>
+						<serverId>ossrh</serverId>
+						<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+						<autoReleaseAfterClose>false</autoReleaseAfterClose>
+					</configuration>
+				</plugin>
+
+				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-checkstyle-plugin</artifactId>
 					<version>3.1.1</version>
@@ -351,16 +377,8 @@
 				<!-- mvn versions:display-dependency-updates -->
 				<!-- mvn versions:display-plugin-updates -->
 				<!-- mvn versions:display-property-updates -->
-				<!-- mvn site -->
+				<!-- mvn site site:stage javadoc:aggregate -->
 			</plugin>
 		</plugins>
 	</reporting>
-
-
-	<repositories>
-		<repository>
-			<id>jcenter</id>
-			<url>https://jcenter.bintray.com/</url>
-		</repository>
-	</repositories>
 </project>

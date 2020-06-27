@@ -15,6 +15,9 @@
  */
 package app.keve.ktlsh.impl;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collection;
@@ -61,6 +64,15 @@ public final class TMTestUtil {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    private static <T> T get(final TlshCreator tlsh, final String name) {
+        try {
+            return (T) tlshCreatorFields.get(name).get(tlsh);
+        } catch (IllegalAccessException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
     /**
      * get Tlsh.checksum.
      * 
@@ -68,6 +80,16 @@ public final class TMTestUtil {
      * @return the value of the checksum field.
      */
     public static int[] getChecksum(final Tlsh tlsh) {
+        return get(tlsh, "checksum");
+    }
+
+    /**
+     * get TlshCreator.checksum.
+     * 
+     * @param tlsh the TlshCreator instance
+     * @return the value of the checksumArray field.
+     */
+    public static int getChecksum(final TlshCreator tlsh) {
         return get(tlsh, "checksum");
     }
 
@@ -109,6 +131,36 @@ public final class TMTestUtil {
      */
     public static int[] getCodes(final Tlsh tlsh) {
         return get(tlsh, "codes");
+    }
+
+    /**
+     * get TlshCreator.a_bucket.
+     * 
+     * @param tlsh the TlshCreator instance
+     * @return the value of the a_bucket field.
+     */
+    public static long[] getABucket(final TlshCreator tlsh) {
+        return get(tlsh, "a_bucket");
+    }
+
+    /**
+     * get TlshCreator.checksumArray.
+     * 
+     * @param tlsh the TlshCreator instance
+     * @return the value of the checksumArray field.
+     */
+    public static int[] getChecksumArray(final TlshCreator tlsh) {
+        return get(tlsh, "checksumArray");
+    }
+
+    /**
+     * get TlshCreator.data_len.
+     * 
+     * @param tlsh the TlshCreator instance
+     * @return the value of the data_len field.
+     */
+    public static int getDataLen(final TlshCreator tlsh) {
+        return get(tlsh, "data_len");
     }
 
     private static void dump(final Collection<Field> fields, final Object c) {
@@ -155,6 +207,39 @@ public final class TMTestUtil {
      */
     public static void dump(final Tlsh tTLSH) {
         dump(tlshFields.values(), tTLSH);
+    }
+
+    /**
+     * Assert that the internal states of reference implementation and K
+     * implementation are equal.
+     * 
+     * @param tlsh the TlshCreator instance of the reference implementation
+     * @param kd   the TLSHDigest of the K implementation
+     */
+    public static void assertEqualState(final TlshCreator tlsh, final TLSHDigest kd) {
+        final AbstractTLSHDigest akd = (AbstractTLSHDigest) kd;
+        assertArrayEquals(getABucket(tlsh), akd.aBucket);
+        if (1 == akd.checkSumLength) {
+            assertEquals(getChecksum(tlsh), akd.checksum[0]);
+        } else {
+            assertArrayEquals(getChecksumArray(tlsh), akd.checksum);
+        }
+        assertEquals(getDataLen(tlsh), akd.count);
+    }
+
+    /**
+     * Assert that the internal states of reference implementation and K
+     * implementation are equal.
+     * 
+     * @param tTLSH the Tlsh instance of the reference implementation
+     * @param kTLSH the TLSH instance of the K implementation
+     */
+    public static void assertEqualState(final Tlsh tTLSH, final TLSH kTLSH) {
+        assertArrayEquals(getChecksum(tTLSH), kTLSH.checksum);
+        assertEquals(getLvalue(tTLSH), kTLSH.lValue);
+        assertEquals(getQ1ratio(tTLSH), kTLSH.q1);
+        assertEquals(getQ2ratio(tTLSH), kTLSH.q2);
+        assertArrayEquals(getCodes(tTLSH), kTLSH.body);
     }
 
 }

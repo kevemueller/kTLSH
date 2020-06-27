@@ -29,7 +29,7 @@ import com.trendmicro.tlsh.Tlsh;
 import com.trendmicro.tlsh.TlshCreator;
 
 import app.keve.ktlsh.TLSHUtil;
-import app.keve.ktlsh.Util;
+import app.keve.ktlsh.testutil.Util;
 
 /**
  * Test digester operation between TM and K implementations.
@@ -69,12 +69,9 @@ public final class TestDigest {
 
         for (byte i = 1; i < 8; i++) {
             kd.update(i);
-            System.out.println(kd);
-
             td.update(new byte[] {i});
-            TMTestUtil.dump(td);
 
-            System.out.println("---");
+            TMTestUtil.assertEqualState(td, kd);
         }
     }
 
@@ -94,13 +91,12 @@ public final class TestDigest {
         kd.update(buf);
         td.update(buf);
 
-        System.out.println(kd);
-        TMTestUtil.dump(td);
+        TMTestUtil.assertEqualState(td, kd);
 
         final TLSH kTLSH = kd.digest();
         final Tlsh tTLSH = td.getHash();
-        System.out.println(kTLSH);
-        TMTestUtil.dump(tTLSH);
+
+        TMTestUtil.assertEqualState(tTLSH, kTLSH);
 
         final String kHash = TLSHUtil.encoded(kTLSH.pack());
         final String tHash = tTLSH.toString();
@@ -128,13 +124,12 @@ public final class TestDigest {
             td.update(new byte[] {buf[i]});
         }
 
-        System.out.println(kd);
-        TMTestUtil.dump(td);
+        TMTestUtil.assertEqualState(td, kd);
 
         final TLSH kTLSH = kd.digest();
         final Tlsh tTLSH = td.getHash();
-        System.out.println(kTLSH);
-        TMTestUtil.dump(tTLSH);
+
+        TMTestUtil.assertEqualState(tTLSH, kTLSH);
 
         final String kHash = TLSHUtil.encoded(kTLSH.pack());
         final String tHash = tTLSH.toString();
@@ -165,13 +160,12 @@ public final class TestDigest {
             td.update(iu);
         }
 
-        System.out.println(kd);
-        TMTestUtil.dump(td);
+        TMTestUtil.assertEqualState(td, kd);
 
         final TLSH kTLSH = kd.digest();
         final Tlsh tTLSH = td.getHash();
-        System.out.println(kTLSH);
-        TMTestUtil.dump(tTLSH);
+
+        TMTestUtil.assertEqualState(tTLSH, kTLSH);
 
         final String kHash = TLSHUtil.encoded(kTLSH.pack());
         final String tHash = tTLSH.toString();
@@ -202,13 +196,12 @@ public final class TestDigest {
             td.update(iu);
         }
 
-        System.out.println(kd);
-        TMTestUtil.dump(td);
+        TMTestUtil.assertEqualState(td, kd);
 
         final TLSH kTLSH = kd.digest();
         final Tlsh tTLSH = td.getHash();
-        System.out.println(kTLSH);
-        TMTestUtil.dump(tTLSH);
+
+        TMTestUtil.assertEqualState(tTLSH, kTLSH);
 
         final String kHash = TLSHUtil.encoded(kTLSH.pack());
         final String tHash = tTLSH.toString();
@@ -235,13 +228,12 @@ public final class TestDigest {
         kd.update(buf);
         td.update(buf);
 
-        System.out.println(kd);
-        TMTestUtil.dump(td);
+        TMTestUtil.assertEqualState(td, kd);
 
         final TLSH kTLSH = kd.digest();
         final Tlsh tTLSH = td.getHash();
-        System.out.println(kTLSH);
-        TMTestUtil.dump(tTLSH);
+
+        TMTestUtil.assertEqualState(tTLSH, kTLSH);
 
         final String kHash = TLSHUtil.encoded(kTLSH.pack());
         final String tHash = tTLSH.toString();

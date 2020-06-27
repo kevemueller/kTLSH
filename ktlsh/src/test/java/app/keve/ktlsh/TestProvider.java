@@ -35,6 +35,7 @@ import app.keve.ktlsh.impl.TLSHDigest5;
 import app.keve.ktlsh.impl.TLSHDigest6;
 import app.keve.ktlsh.impl.TLSHDigest7;
 import app.keve.ktlsh.impl.TLSHDigest8;
+import app.keve.ktlsh.testutil.Util;
 
 /**
  * The registering and retrieving the providers.
@@ -49,7 +50,7 @@ public final class TestProvider {
     private static final int MEDIUM_SIZE = 65536;
 
     static {
-        TLSHUtil.registerProviders();
+        Util.registerProvider();
     }
 
     /**
@@ -76,7 +77,7 @@ public final class TestProvider {
         System.out.println("TLSH algname " + mdTLSH.getAlgorithm());
         System.out.println("TLSH length " + mdTLSH.getDigestLength());
 
-        mdTLSH = MessageDigest.getInstance(TLSH, TLSHUtil.providerNameTM());
+        mdTLSH = MessageDigest.getInstance(TLSH, Util.providerNameTM());
         assertNotNull(mdTLSH);
 
         System.out.println("TLSH provider " + mdTLSH.getProvider());
@@ -92,7 +93,7 @@ public final class TestProvider {
     public void testAllInstances() throws NoSuchAlgorithmException, NoSuchProviderException {
         final int[] buckets = {128, 256};
         final int[] checksum = {1, 3};
-        final String[] provider = {TLSHUtil.providerNameK(), TLSHUtil.providerNameTM()};
+        final String[] provider = {TLSHUtil.providerNameK(), Util.providerNameTM()};
 
         for (int i = 0; i < buckets.length; i++) {
             for (int j = 0; j < checksum.length; j++) {

@@ -49,7 +49,7 @@ public final class TestExampleData {
     private final String provider;
 
     static {
-        TLSHUtil.registerProviders();
+        TLSHUtil.registerProvider();
     }
 
     /** Construct test class instance, assign provider to be used. */
