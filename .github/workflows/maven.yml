@@ -37,23 +37,17 @@ jobs:
             restore-keys: m2
       -  name: Build with Maven
          run: mvn -B verify package --file pom.xml
+      -  name: Run benchmarks
+         run: java -jar benchmarks.jar
+         working-directory: ktlsh-jmh/target
       -  name: copy artifacts non-windows
          if: ${{matrix.os != 'windows-latest'}}
          run: mkdir staging && cp ktlsh/target/*.jar ktlsh-jmh/target/benchmarks.jar staging
       -  name: copy artifacts windows
          if: ${{matrix.os == 'windows-latest'}}
-         run: |
-            mkdir staging 
-            get-childitem -path ktlsh/target -filter *.jar | copy-item -destination staging
-            get-childitem -path ktlsh-jmh/target -filter benchmarks.jar | copy-item -destination staging
+         run: "mkdir staging \nget-childitem -path ktlsh/target -filter *.jar | copy-item -destination staging\nget-childitem\
+            \ -path ktlsh-jmh/target -filter benchmarks.jar | copy-item -destination staging\n"
       -  uses: actions/upload-artifact@v1
          with:
             name: Package-${{matrix.java}}-${{matrix.os}}
             path: staging
-# This operation gets cancelled
-# ----------------
-# Orphan comments:
-# ----------------
-# Was at begin of line:46 :# name: Run benchmarks
-# Was at begin of line:47 :# run: java -jar benchmarks.jar
-# Was at begin of line:48 :# working-directory: ktlsh-jmh/target
