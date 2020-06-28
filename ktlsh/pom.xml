@@ -1,6 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -25,7 +26,20 @@
 			<artifactId>junit-jupiter</artifactId>
 		</dependency>
 	</dependencies>
+
 	<build>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<includes>
+					<include>tlsh/*.txt</include>
+					<include>
+						tlsh/Testing/**
+					</include>
+				</includes>
+				<filtering>false</filtering>
+			</testResource>
+		</testResources>
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -62,19 +76,8 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 			</plugin>
 		</plugins>
-		<testResources>
-			<testResource>
-				<directory>src/test/resources</directory>
-				<includes>
-					<include>tlsh/*.txt</include>
-					<include>
-						tlsh/Testing/**
-					</include>
-				</includes>
-				<filtering>false</filtering>
-			</testResource>
-		</testResources>
 	</build>
+
 	<reporting>
 	</reporting>
 </project>

@@ -1,8 +1,9 @@
 # kTLSH
 A fresh look at implementing TLSH in Java.
 
+[![Apache License, Version 2.0, January 2004](https://img.shields.io/github/license/kevemueller/kTLSH.svg?label=License)](http://www.apache.org/licenses/)
+[![Maven Central](https://img.shields.io/maven-central/v/app.keve.ktlsh/ktlsh.svg?label=Maven%20Central)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22app.keve.ktlsh%22%20AND%20a%3A%22ktlsh%22)
 ![Java CI with Maven](https://github.com/kevemueller/kTLSH/workflows/Java%20CI%20with%20Maven/badge.svg)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/app.keve.ktlsh/ktlsh/badge.svg)](https://maven-badges.herokuapp.com/maven-central/app.keve.ktlsh/ktlsh)
 
 ## Purpose
 This source implements the [TLSH - Trend Locality Sensitive Hash](https://github.com/trendmicro/tlsh) method in Java language.

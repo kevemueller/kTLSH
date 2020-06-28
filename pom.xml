@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>app.keve.ktlsh</groupId>
@@ -13,11 +13,11 @@
 	<description>A fresh look at implementing TLSH in Java.</description>
 	<url>https://ktlsh.keve.app/maven-site</url>
 	<inceptionYear>2020</inceptionYear>
-
 	<licenses>
 		<license>
 			<name>The Apache License, Version 2.0</name>
 			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
 		</license>
 	</licenses>
 
@@ -27,8 +27,17 @@
 			<email>ktlsh@keve.app</email>
 			<organization>Keve</organization>
 			<organizationUrl>https://keve.app</organizationUrl>
+			<roles>
+				<role>Lead Developer</role>
+			</roles>
+			<timezone>1</timezone>
 		</developer>
 	</developers>
+
+	<modules>
+		<module>ktlsh</module>
+		<module>ktlsh-jmh</module>
+	</modules>
 
 	<scm>
 		<connection>scm:git:git://github.com/kevemueller/kTLSH.git</connection>
@@ -36,7 +45,10 @@
 		<url>http://github.com/kevemueller/kTLSH/tree/master</url>
 		<tag>ktlsh-1.0.0</tag>
 	</scm>
-
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/kevemueller/kTLSH/issues</url>
+	</issueManagement>
 	<distributionManagement>
 		<site>
 			<id>ktlsh.gh-pages</id>
@@ -59,127 +71,18 @@
 		<projectRoot>${basedir}</projectRoot>
 	</properties>
 
-	<modules>
-		<module>ktlsh</module>
-		<module>ktlsh-jmh</module>
-	</modules>
-
-	<profiles>
-		<profile>
-			<id>release</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-source-plugin</artifactId>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter</artifactId>
+				<version>5.6.2</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>tidy-maven-plugin</artifactId>
-				<version>1.1.0</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-enforcer-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>enforce-maven</id>
-						<goals>
-							<goal>enforce</goal>
-						</goals>
-						<configuration>
-							<rules>
-								<requireMavenVersion>
-									<version>[3.6.0,)</version>
-								</requireMavenVersion>
-							</rules>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<!-- Usage: -->
-				<!-- mvn -P release clean verify deploy -->
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<goals>
-					<goal>aggregate</goal>
-				</goals>
-				<configuration>
-					<excludePackageNames>app.keve.ktlsh.benchmarks.generated</excludePackageNames>
-					<reportOutputDirectory>${project.build.directory}/staging/apidocs</reportOutputDirectory>
-					<additionalDependencies>
-						<additionalDependency>
-							<groupId>app.keve.ktlsh</groupId>
-							<artifactId>ktlsh</artifactId>
-							<version>${project.version}</version>
-							<classifier>tests</classifier>
-						</additionalDependency>
-					</additionalDependencies>
-				</configuration>
-				<inherited>false</inherited>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-site-static</id>
-						<phase>site</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${basedir}/target/staging</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${basedir}</directory>
-									<include>README.md</include>
-								</resource>
-								<resource>
-									<directory>${basedir}/src/gh-pages</directory>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-scm-publish-plugin</artifactId>
-				<configuration>
-					<pubScmUrl>scm:git:https://github.com/kevemueller/kTLSH.git</pubScmUrl>
-					<scmBranch>gh-pages</scmBranch>
-					<tryUpdate>true</tryUpdate>
-				</configuration>
-				<!-- Usage: -->
-				<!-- mvn clean verify package site site:stage javadoc:aggregate scm-publish:publish-scm -->
-			</plugin>
-		</plugins>
-
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -314,6 +217,7 @@
 					<version>3.9.0</version>
 					<configuration>
 						<topSiteURL>https://ktlsh.keve.app/</topSiteURL>
+						<skipDeploy>true</skipDeploy> <!-- don't deploy site with maven-site-plugin, we use maven-scm-publish-plugin -->
 					</configuration>
 				</plugin>
 				<plugin>
@@ -338,6 +242,11 @@
 					</configuration>
 				</plugin>
 				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>tidy-maven-plugin</artifactId>
+					<version>1.1.0</version>
+				</plugin>
+				<plugin>
 					<groupId>org.sonatype.plugins</groupId>
 					<artifactId>nexus-staging-maven-plugin</artifactId>
 					<version>1.6.8</version>
@@ -350,17 +259,99 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>tidy-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>enforce-maven</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireMavenVersion>
+									<version>[3.6.0,)</version>
+								</requireMavenVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<!-- Usage: -->
+				<!-- mvn -P release clean verify deploy -->
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<goals>
+					<goal>aggregate</goal>
+				</goals>
+				<configuration>
+					<excludePackageNames>app.keve.ktlsh.benchmarks.generated</excludePackageNames>
+					<reportOutputDirectory>${project.build.directory}/staging/apidocs</reportOutputDirectory>
+					<additionalDependencies>
+						<additionalDependency>
+							<groupId>app.keve.ktlsh</groupId>
+							<artifactId>ktlsh</artifactId>
+							<version>${project.version}</version>
+							<classifier>tests</classifier>
+						</additionalDependency>
+					</additionalDependencies>
+				</configuration>
+				<inherited>false</inherited>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-site-static</id>
+						<phase>site</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/staging</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}</directory>
+									<include>README.md</include>
+								</resource>
+								<resource>
+									<directory>${basedir}/src/gh-pages</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-scm-publish-plugin</artifactId>
+				<configuration>
+					<pubScmUrl>scm:git:https://github.com/kevemueller/kTLSH.git</pubScmUrl>
+					<scmBranch>gh-pages</scmBranch>
+					<tryUpdate>true</tryUpdate>
+				</configuration>
+				<!-- Usage: -->
+				<!-- mvn clean verify package site site:stage javadoc:aggregate scm-publish:publish-scm -->
+			</plugin>
+		</plugins>
 	</build>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.junit.jupiter</groupId>
-				<artifactId>junit-jupiter</artifactId>
-				<version>5.6.2</version>
-				<scope>test</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+
 	<reporting>
 		<plugins>
 			<plugin>
@@ -395,4 +386,26 @@
 			</plugin>
 		</plugins>
 	</reporting>
+
+	<profiles>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
