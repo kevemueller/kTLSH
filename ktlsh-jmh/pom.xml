@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>ktlsh-parent</artifactId>
 		<groupId>app.keve.ktlsh</groupId>
-		<version>1.0.0</version>
+		<version>1.0.1-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>ktlsh-jmh</artifactId>

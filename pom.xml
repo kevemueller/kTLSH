@@ -4,7 +4,7 @@
 
 	<groupId>app.keve.ktlsh</groupId>
 	<artifactId>ktlsh-parent</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>kTLSH (parent)</name>
@@ -30,7 +30,7 @@
 
 	<scm>
 		<connection>scm:git:git://github.com/kevemueller/kTLSH.git</connection>
-		<developerConnection>scm:git:ssh://github.com/kevemueller/kTLSH.git</developerConnection>
+		<developerConnection>scm:git:ssh://github.com:kevemueller/kTLSH.git</developerConnection>
 		<url>http://github.com/kevemueller/kTLSH/tree/master</url>
 	  <tag>ktlsh-1.0.0</tag>
   </scm>
