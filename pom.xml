@@ -32,7 +32,7 @@
 
 	<scm>
 		<connection>scm:git:git://github.com/kevemueller/kTLSH.git</connection>
-		<developerConnection>scm:git:ssh://github.com:kevemueller/kTLSH.git</developerConnection>
+		<developerConnection>scm:git:ssh://github.com/kevemueller/kTLSH.git</developerConnection>
 		<url>http://github.com/kevemueller/kTLSH/tree/master</url>
 	</scm>
 
