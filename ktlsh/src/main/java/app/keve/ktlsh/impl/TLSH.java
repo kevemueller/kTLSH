@@ -99,11 +99,21 @@ public final class TLSH {
      */
     private static final int DIFF_SCALE6 = 6;
 
-    /** The log(1.5) constant used in CPP reference implementation. */
+    /** The length threshold for step 1. */
+    private static final int LEN_STEP_1 = 656;
+    /** The log(1.5) constant used in CPP reference implementation for step 1. */
     private static final double LOG_1_5 = 0.4054651D;
-    /** The log(1.3) constant used in CPP reference implementation. */
+
+    /** The length threshold for step 2. */
+    private static final int LEN_STEP_2 = 3199;
+    /** The adjustment for step 2. */
+    private static final double LEN_ADJ_2 = 8.72777D;
+    /** The log(1.3) constant used in CPP reference implementation for step 2. */
     private static final double LOG_1_3 = 0.26236426D;
-    /** The log(1.1) constant used in CPP reference implementation. */
+
+    /** The adjustment for step 3. */
+    private static final double LEN_ADJ_3 = 62.5472D;
+    /** The log(1.1) constant used in CPP reference implementation for step 3. */
     private static final double LOG_1_1 = 0.095310180D;
 
     /**
@@ -337,18 +347,17 @@ public final class TLSH {
      * @param len the length
      * @return the byte value
      */
-    @SuppressWarnings("checkstyle:MagicNumber")
     public static int lCapturingLog(final long len) {
         if (len <= 0) {
             return 0;
         }
         double d = (float) Math.log((float) len);
-        if (len <= 656) {
+        if (len <= LEN_STEP_1) {
             d = d / LOG_1_5;
-        } else if (len <= 3199) {
-            d = d / LOG_1_3 - 8.72777D;
+        } else if (len <= LEN_STEP_2) {
+            d = d / LOG_1_3 - LEN_ADJ_2;
         } else {
-            d = d / LOG_1_1 - 62.5472D;
+            d = d / LOG_1_1 - LEN_ADJ_3;
         }
 //        return (int) Math.floor(d) & 0xFF;
         return Math.min((int) Math.floor(d), 255);

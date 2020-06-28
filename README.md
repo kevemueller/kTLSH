@@ -69,7 +69,7 @@ HashBenchmark.testTMSmall32KiB   thrpt    2   94514.575          ops/s
 HashBenchmark.testMD5Large16MiB  thrpt    2  507247.038          ops/s
 HashBenchmark.testMD5Small32KiB  thrpt    2  497034.176          ops/s
 ```
-The results show that the implementation is approx. 24% faster on large datasets and approx. 22% faster on small datasets compared to the reference Java port.
+The results show that the implementation is approx. 24% faster on large datasets and approx. 22% faster on small datasets compared to the reference Java port. Preliminary comparison on large datasets of the C++ implementation show that the C++ implemetation is comparable in speed to the reference Java implementation, i.e. slower than this Java implementation.
 
 As a comparison the performance of the MD5 hash on the same datasets is also obtained.
 

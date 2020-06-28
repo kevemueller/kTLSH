@@ -45,7 +45,6 @@ public final class TLSHDigest5 extends AbstractTLSHDigest {
     }
 
     @Override
-    @SuppressWarnings("checkstyle:MagicNumber")
     public void update(final ByteBuffer buf) {
         while (count < windowLength - 1 && buf.hasRemaining()) {
             final int l0 = buf.get() & 0xFF;
@@ -65,27 +64,27 @@ public final class TLSHDigest5 extends AbstractTLSHDigest {
             count++;
             switch (checkSumLength) {
             case 1:
-                checksum[0] = sMapping(1 /* T[0] */, l0, l1, checksum[0]);
+                checksum[0] = sMapping(T0, l0, l1, checksum[0]);
                 break;
             case 3:
-                checksum[0] = sMapping(1 /* T[0] */, l0, l1, checksum[0]);
+                checksum[0] = sMapping(T0, l0, l1, checksum[0]);
                 checksum[1] = bMapping(checksum[0], l0, l1, checksum[1]);
                 checksum[2] = bMapping(checksum[1], l0, l1, checksum[2]);
                 break;
             default:
-                checksum[0] = sMapping(1 /* T[0] */, l0, l1, checksum[0]);
+                checksum[0] = sMapping(T0, l0, l1, checksum[0]);
                 for (int k = 1; k < checksum.length; k++) {
                     checksum[k] = bMapping(checksum[k - 1], l0, l1, checksum[k]);
                 }
                 break;
             }
-            aBucket[sMapping(49 /* T[2] */, l0, l1, l2)]++;
-            aBucket[sMapping(12 /* T[3] */, l0, l1, l3)]++;
-            aBucket[sMapping(178 /* T[5] */, l0, l2, l3)]++;
+            aBucket[sMapping(T2, l0, l1, l2)]++;
+            aBucket[sMapping(T3, l0, l1, l3)]++;
+            aBucket[sMapping(T5, l0, l2, l3)]++;
 
-            aBucket[sMapping(166 /* T[7] */, l0, l2, l4)]++;
-            aBucket[sMapping(84 /* T[11] */, l0, l1, l4)]++;
-            aBucket[sMapping(230 /* T[13] */, l0, l3, l4)]++;
+            aBucket[sMapping(T7, l0, l2, l4)]++;
+            aBucket[sMapping(T11, l0, l1, l4)]++;
+            aBucket[sMapping(T13, l0, l3, l4)]++;
 
             l4 = l3;
             l3 = l2;

@@ -75,4 +75,6 @@
 			</testResource>
 		</testResources>
 	</build>
+	<reporting>
+	</reporting>
 </project>

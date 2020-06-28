@@ -24,6 +24,51 @@ import java.util.Arrays;
  *
  */
 public abstract class AbstractTLSHDigest implements TLSHDigest {
+    /** The Pearson default hash of 0. */
+    protected static final int T0 = 1 /* T[0] */;
+    /** The Pearson default hash of 2. */
+    protected static final int T2 = 49 /* T[2] */;
+    /** The Pearson default hash of 3. */
+    protected static final int T3 = 12 /* T[3] */;
+    /** The Pearson default hash of 5. */
+    protected static final int T5 = 178 /* T[5] */;
+    /** The Pearson default hash of 7. */
+    protected static final int T7 = 166 /* T[7] */;
+    /** The Pearson default hash of 11. */
+    protected static final int T11 = 84 /* T[11] */;
+    /** The Pearson default hash of 13. */
+    protected static final int T13 = 230 /* T[13] */;
+    /** The Pearson default hash of 17. */
+    protected static final int T17 = 197 /* T[17] */;
+    /** The Pearson default hash of 19. */
+    protected static final int T19 = 181 /* T[19] */;
+    /** The Pearson default hash of 23. */
+    protected static final int T23 = 80 /* T[23] */;
+    /** The Pearson default hash of 29. */
+    protected static final int T29 = 142 /* T[29] */;
+    /** The Pearson default hash of 31. */
+    protected static final int T31 = 200 /* T[31] */;
+    /** The Pearson default hash of 37. */
+    protected static final int T37 = 253 /* T[37] */;
+    /** The Pearson default hash of 41. */
+    protected static final int T41 = 101 /* T[41] */;
+    /** The Pearson default hash of 43. */
+    protected static final int T43 = 18 /* T[43] */;
+    /** The Pearson default hash of 47. */
+    protected static final int T47 = 222 /* T[47] */;
+    /** The Pearson default hash of 53. */
+    protected static final int T53 = 237 /* T[53] */;
+    /** The Pearson default hash of 59. */
+    protected static final int T59 = 214 /* T[59] */;
+    /** The Pearson default hash of 61. */
+    protected static final int T61 = 227 /* T[61] */;
+    /** The Pearson default hash of 67. */
+    protected static final int T67 = 22 /* T[67] */;
+    /** The Pearson default hash of 71. */
+    protected static final int T71 = 175 /* T[71] */;
+    /** The Pearson default hash of 73. */
+    protected static final int T73 = 5 /* T[73] */;
+
     /** the window length [4-8]. */
     protected final int windowLength;
     /** the bucket count (128|256). */

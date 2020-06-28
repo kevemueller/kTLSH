@@ -44,7 +44,6 @@ public final class TLSHDigest8 extends AbstractTLSHDigest {
     }
 
     @Override
-    @SuppressWarnings("checkstyle:MagicNumber")
     public void update(final ByteBuffer buf) {
         int l1 = (int) (lag & 0xFF);
         int l2 = (int) (lag >>> 8 & 0xFF);
@@ -59,46 +58,46 @@ public final class TLSHDigest8 extends AbstractTLSHDigest {
             if (count >= windowLength) {
                 switch (checkSumLength) {
                 case 1:
-                    checksum[0] = sMapping(1 /* T[0] */, l0, l1, checksum[0]);
+                    checksum[0] = sMapping(T0, l0, l1, checksum[0]);
                     break;
                 case 3:
-                    checksum[0] = sMapping(1 /* T[0] */, l0, l1, checksum[0]);
+                    checksum[0] = sMapping(T0, l0, l1, checksum[0]);
                     checksum[1] = bMapping(checksum[0], l0, l1, checksum[1]);
                     checksum[2] = bMapping(checksum[1], l0, l1, checksum[2]);
                     break;
                 default:
-                    checksum[0] = sMapping(1 /* T[0] */, l0, l1, checksum[0]);
+                    checksum[0] = sMapping(T0, l0, l1, checksum[0]);
                     for (int k = 1; k < checksum.length; k++) {
                         checksum[k] = bMapping(checksum[k - 1], l0, l1, checksum[k]);
                     }
                     break;
                 }
 
-                aBucket[sMapping(49 /* T[2] */, l0, l1, l2)]++;
-                aBucket[sMapping(12 /* T[3] */, l0, l1, l3)]++;
-                aBucket[sMapping(178 /* T[5] */, l0, l2, l3)]++;
+                aBucket[sMapping(T2, l0, l1, l2)]++;
+                aBucket[sMapping(T3, l0, l1, l3)]++;
+                aBucket[sMapping(T5, l0, l2, l3)]++;
 
-                aBucket[sMapping(166 /* T[7] */, l0, l2, l4)]++;
-                aBucket[sMapping(84 /* T[11] */, l0, l1, l4)]++;
-                aBucket[sMapping(230 /* T[13] */, l0, l3, l4)]++;
+                aBucket[sMapping(T7, l0, l2, l4)]++;
+                aBucket[sMapping(T11, l0, l1, l4)]++;
+                aBucket[sMapping(T13, l0, l3, l4)]++;
 
-                aBucket[sMapping(197 /* T[17] */, l0, l1, l5)]++;
-                aBucket[sMapping(181 /* T[19] */, l0, l2, l5)]++;
-                aBucket[sMapping(80 /* T[23] */, l0, l3, l5)]++;
-                aBucket[sMapping(142 /* T[29] */, l0, l4, l5)]++;
+                aBucket[sMapping(T17, l0, l1, l5)]++;
+                aBucket[sMapping(T19, l0, l2, l5)]++;
+                aBucket[sMapping(T23, l0, l3, l5)]++;
+                aBucket[sMapping(T29, l0, l4, l5)]++;
 
-                aBucket[sMapping(200 /* T[31] */, l0, l1, l6)]++;
-                aBucket[sMapping(253 /* T[37] */, l0, l2, l6)]++;
-                aBucket[sMapping(101 /* T[41] */, l0, l3, l6)]++;
-                aBucket[sMapping(18 /* T[43] */, l0, l4, l6)]++;
-                aBucket[sMapping(222 /* T[47] */, l0, l5, l6)]++;
+                aBucket[sMapping(T31, l0, l1, l6)]++;
+                aBucket[sMapping(T37, l0, l2, l6)]++;
+                aBucket[sMapping(T41, l0, l3, l6)]++;
+                aBucket[sMapping(T43, l0, l4, l6)]++;
+                aBucket[sMapping(T47, l0, l5, l6)]++;
 
-                aBucket[sMapping(237 /* T[53] */, l0, l1, l7)]++;
-                aBucket[sMapping(214 /* T[59] */, l0, l2, l7)]++;
-                aBucket[sMapping(227 /* T[61] */, l0, l3, l7)]++;
-                aBucket[sMapping(22 /* T[67] */, l0, l4, l7)]++;
-                aBucket[sMapping(175 /* T[71] */, l0, l5, l7)]++;
-                aBucket[sMapping(5 /* T[73] */, l0, l6, l7)]++;
+                aBucket[sMapping(T53, l0, l1, l7)]++;
+                aBucket[sMapping(T59, l0, l2, l7)]++;
+                aBucket[sMapping(T61, l0, l3, l7)]++;
+                aBucket[sMapping(T67, l0, l4, l7)]++;
+                aBucket[sMapping(T71, l0, l5, l7)]++;
+                aBucket[sMapping(T73, l0, l6, l7)]++;
             }
             l7 = l6;
             l6 = l5;

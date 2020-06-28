@@ -38,6 +38,7 @@ import org.junit.jupiter.params.provider.MethodSource;
  * @author keve
  *
  */
+@SuppressWarnings("exports") // Surefire needs the public modifier
 public final class TestExampleData {
     /** Base directory of the unit test data. */
     private static final String BASE = "/tlsh/Testing/";
