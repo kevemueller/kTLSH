@@ -44,12 +44,12 @@
 		<dependency>
 			<groupId>app.keve.ktlsh</groupId>
 			<artifactId>ktlsh</artifactId>
-			<version>${ktlsh.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>app.keve.ktlsh</groupId>
 			<artifactId>ktlsh</artifactId>
-			<version>${ktlsh.version}</version>
+			<version>${project.version}</version>
 			<classifier>tests</classifier>
 		</dependency>
 	</dependencies>
