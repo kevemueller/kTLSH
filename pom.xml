@@ -344,6 +344,33 @@
 			<id>release</id>
 			<build>
 				<plugins>
+					<!-- used only in parent context -->
+					<plugin>
+						<!-- release:perform checks out the release from scm -->
+						<!-- use git to initialize the submodules as well -->
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<inherited>false</inherited>
+						<executions>
+							<execution>
+								<id>git submodule update</id>
+								<phase>initialize</phase>
+								<configuration>
+									<executable>git</executable>
+									<arguments>
+										<argument>submodule</argument>
+										<argument>update</argument>
+										<argument>--init</argument>
+										<argument>--recursive</argument>
+									</arguments>
+								</configuration>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- used in all contexts -->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
