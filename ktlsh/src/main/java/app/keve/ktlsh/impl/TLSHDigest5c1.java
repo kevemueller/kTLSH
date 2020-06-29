@@ -18,8 +18,8 @@ package app.keve.ktlsh.impl;
 import java.nio.ByteBuffer;
 
 /**
- * A TLSH digester for window size of 5 bytes and single checksum byte.
- * This is the default TLSH algorithm case.
+ * A TLSH digester for window size of 5 bytes and single checksum byte. This is
+ * the default TLSH algorithm case.
  * 
  * @author keve
  *
@@ -45,7 +45,6 @@ public final class TLSHDigest5c1 extends AbstractTLSHDigest {
     }
 
     @Override
-    @SuppressWarnings("checkstyle:MagicNumber")
     public void update(final ByteBuffer buf) {
         while (count < windowLength - 1 && buf.hasRemaining()) {
             final int l0 = buf.get() & 0xFF;
@@ -64,15 +63,15 @@ public final class TLSHDigest5c1 extends AbstractTLSHDigest {
             final int l0 = buf.get() & 0xFF;
             count++;
 
-            checksum[0] = sMapping(1 /* T[0] */, l0, l1, checksum[0]);
+            checksum[0] = sMapping(T0, l0, l1, checksum[0]);
 
-            aBucket[sMapping(49 /* T[2] */, l0, l1, l2)]++;
-            aBucket[sMapping(12 /* T[3] */, l0, l1, l3)]++;
-            aBucket[sMapping(178 /* T[5] */, l0, l2, l3)]++;
+            aBucket[sMapping(T2, l0, l1, l2)]++;
+            aBucket[sMapping(T3, l0, l1, l3)]++;
+            aBucket[sMapping(T5, l0, l2, l3)]++;
 
-            aBucket[sMapping(166 /* T[7] */, l0, l2, l4)]++;
-            aBucket[sMapping(84 /* T[11] */, l0, l1, l4)]++;
-            aBucket[sMapping(230 /* T[13] */, l0, l3, l4)]++;
+            aBucket[sMapping(T7, l0, l2, l4)]++;
+            aBucket[sMapping(T11, l0, l1, l4)]++;
+            aBucket[sMapping(T13, l0, l3, l4)]++;
 
             l4 = l3;
             l3 = l2;

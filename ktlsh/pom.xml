@@ -32,7 +32,9 @@
 			<testResource>
 				<directory>src/test/resources</directory>
 				<includes>
+					<!-- include NOTICE.txt -->
 					<include>tlsh/*.txt</include>
+					<!-- include the test reference data and expected values -->
 					<include>
 						tlsh/Testing/**
 					</include>
@@ -44,9 +46,12 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>3.2.0</version>
 				<executions>
 					<execution>
+						<!-- TLSH reference implementation does not want to publish to Central -->
+						<!-- see https://github.com/trendmicro/tlsh/issues/57 -->
+						<!-- the tests compare the results towards the reference implementation 
+							as well, hence we include it here -->
 						<id>add-tlsh-source</id>
 						<phase>generate-test-sources</phase>
 						<goals>
@@ -66,18 +71,12 @@
 				<executions>
 					<execution>
 						<goals>
+							<!-- separate tests jar as it is big and unnecessary for normal operation -->
 							<goal>test-jar</goal>
 						</goals>
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-			</plugin>
 		</plugins>
 	</build>
-
-	<reporting>
-	</reporting>
 </project>

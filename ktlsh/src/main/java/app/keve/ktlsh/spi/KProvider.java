@@ -40,7 +40,7 @@ public final class KProvider extends Provider {
     /** The MessageDigest type string. */
     private static final String MESSAGE_DIGEST = "MessageDigest";
     /** The SPI class. */
-    private static final String MESSAGE_DIGEST_SPI = "app.keve.ktlsh.spi.KTLSHMessageDigestSpi";
+    private static final String MESSAGE_DIGEST_SPI = "app.keve.ktlsh.spi.TLSHMessageDigestSpiK";
     /** Version UID. */
     private static final long serialVersionUID = 1L;
 
@@ -48,7 +48,7 @@ public final class KProvider extends Provider {
      * Initialise the K provider with the known algorithms.
      */
     public KProvider() {
-        super(NAME, "1.0",
+        super(NAME, "1.0.1",
                 "Implementation of the TLSH - Trend Locality Sensitive Hash MessageDigest using app.keve.ktlsh.");
 
         final int[] buckets = {128, 256};
@@ -102,8 +102,8 @@ public final class KProvider extends Provider {
                     }
                 }
             } catch (final Exception ex) {
-                throw new NoSuchAlgorithmException(
-                        "Error constructing " + type + " for " + algo + " using KAppProvider", ex);
+                throw new NoSuchAlgorithmException("Error constructing " + type + " for " + algo + " using " + NAME,
+                        ex);
             }
             throw new ProviderException("No impl for " + algo + " " + type);
         }

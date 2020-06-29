@@ -40,8 +40,8 @@ import app.keve.ktlsh.testutil.Util;
  *
  */
 @Fork(1)
-@Warmup(time = 2)
-@Measurement(iterations = 2)
+@Warmup(iterations = 2, time = 2)
+@Measurement(iterations = 3)
 public class HashBenchmark {
     /** The algorithm name. */
     private static final String TLSH_ALGNAME = "TLSH";

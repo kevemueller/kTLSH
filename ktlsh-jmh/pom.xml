@@ -25,6 +25,8 @@
 
 		<!-- Name of the benchmark Uber-JAR to generate. -->
 		<uberjar.name>benchmarks</uberjar.name>
+		
+		<!-- we need to know the place of the checkstyle configuration -->
 		<projectRoot>${basedir}/..</projectRoot>
 	</properties>
 
@@ -45,6 +47,7 @@
 			<artifactId>ktlsh</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<!-- also depend on the tests to grab the reference implementation -->
 		<dependency>
 			<groupId>app.keve.ktlsh</groupId>
 			<artifactId>ktlsh</artifactId>
@@ -70,6 +73,7 @@
 				<configuration>
 					<archive>
 						<manifestEntries>
+							<!-- make javadoc happy -->
 							<Automatic-Module-Name>app.keve.ktlsh.benchmarks</Automatic-Module-Name>
 						</manifestEntries>
 					</archive>
