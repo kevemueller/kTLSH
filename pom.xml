@@ -406,8 +406,7 @@
 			<build>
 				<plugins>
 					<!-- used only in parent context -->
-					<plugin>
-						<!-- release:perform checks out the release from scm -->
+					<plugin><!-- release:perform checks out the release from scm -->
 						<!-- use git to initialize the submodules as well -->
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>exec-maven-plugin</artifactId>
