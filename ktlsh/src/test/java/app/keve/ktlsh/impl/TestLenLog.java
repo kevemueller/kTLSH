@@ -18,6 +18,7 @@ package app.keve.ktlsh.impl;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.io.PrintStream;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.Disabled;
@@ -30,7 +31,7 @@ import org.junit.jupiter.api.Test;
  *
  */
 @SuppressWarnings("checkstyle:MagicNumber")
-public final class TestLenLog {
+public final class TestLenLog extends AbstractImplTest {
     /** The topval array used in CPP reference implementation. */
     private static final long[] TOPVAL_REFERENCE = {1, 2, 3, 5, 7, 11, 17, 25, 38, 57, 86, 129, 194, 291, 437, 656, 854,
             1110, 1443, 1876, 2439, 3171, 3475, 3823, 4205, 4626, 5088, 5597, 6157, 6772, 7450, 8195, 9014, 9916, 10907,
@@ -71,7 +72,7 @@ public final class TestLenLog {
             final int lenLog = TLSH.lCapturingLog(l);
             final int lCapture = TLSH.lCapturing(l);
             if (lCapture != last) {
-                System.out.printf("%d - %d\n", last, l - 1);
+                LOGGER.info("{} - {}", last, l - 1);
                 last = lCapture;
             }
             assertEquals(lCapture, lenLog, String.format("Mismatch at %d", l));
@@ -119,6 +120,8 @@ public final class TestLenLog {
      */
     @Test
     public void testInvLen() {
+        final PrintStream out = System.out;
+
         final long[] topval = new long[256];
         for (int i = 1; i <= 256; i++) {
             long len;
@@ -133,14 +136,14 @@ public final class TestLenLog {
                 len--;
             }
             if (i < 256) {
-                System.out.printf(", /* %d  */ %d%s", i - 1, len, len > Integer.MAX_VALUE ? "L" : "");
+                out.printf(", /* %d  */ %d%s", i - 1, len, len > Integer.MAX_VALUE ? "L" : "");
             } else {
-                System.out.printf(", /* %d  */ /* %dL */ Long.MAX_VALUE", i - 1, len);
+                out.printf(", /* %d  */ /* %dL */ Long.MAX_VALUE", i - 1, len);
                 len = Long.MAX_VALUE;
             }
             topval[i - 1] = len;
         }
-        System.out.println();
+        out.println();
         assertArrayEquals(TLSH.TOPVAL, topval);
     }
 

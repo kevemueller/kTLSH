@@ -147,20 +147,20 @@ public abstract class AbstractTLSHDigest implements TLSHDigest {
 
     @Override
     public final String toString() {
-        final StringBuffer sb = new StringBuffer();
-        sb.append("aBucket=\n");
+        final StringBuffer stringBuffer = new StringBuffer(64);
+        stringBuffer.append("aBucket=\n");
         for (int i = 0; i < aBucket.length; i++) {
             if (aBucket[i] > 0) {
-                sb.append(i).append(":").append(aBucket[i]).append('\n');
+                stringBuffer.append(i).append(':').append(aBucket[i]).append('\n');
             }
         }
-        sb.append('\n');
+        stringBuffer.append('\n');
         final int[] lag = getLag();
-        sb.append("lag=").append(Arrays.toString(lag)).append('\n');
+        stringBuffer.append("lag=").append(Arrays.toString(lag)).append('\n');
 
-        sb.append("count=").append(count).append('\n');
-        sb.append("checksum=").append(Arrays.toString(checksum)).append('\n');
-        return sb.toString();
+        stringBuffer.append("count=").append(count).append('\n');
+        stringBuffer.append("checksum=").append(Arrays.toString(checksum)).append('\n');
+        return stringBuffer.toString();
     }
 
 }

@@ -15,6 +15,8 @@
  */
 package app.keve.ktlsh;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -33,12 +35,7 @@ import org.junit.jupiter.api.Test;
  * @author keve
  *
  */
-public class TestLargeFile {
-
-    static {
-        TLSHUtil.registerProvider();
-    }
-
+public class TestLargeFile extends AbstractTest {
     /**
      * Test digesting a large (>4G) file.
      * 
@@ -55,6 +52,8 @@ public class TestLargeFile {
             din.transferTo(OutputStream.nullOutputStream());
         }
         final byte[] hash = md.digest();
-        System.out.println(TLSHUtil.encoded(hash));
+        final String xhash = TLSHUtil.encoded(hash);
+        LOGGER.info(xhash);
+        assertNotNull(xhash, "should not blow up");
     }
 }

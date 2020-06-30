@@ -55,9 +55,9 @@ public final class TLSHUtil {
      * Dynamically register the K provider.
      */
     public static void registerProvider() {
-        final ServiceLoader<Provider> sl = ServiceLoader.load(java.security.Provider.class);
-        for (final Provider p : sl) {
-            if (p.getName().equals(KProvider.NAME)) {
+        final ServiceLoader<Provider> serviceLoader = ServiceLoader.load(Provider.class);
+        for (final Provider p : serviceLoader) {
+            if (KProvider.NAME.equals(p.getName())) {
                 Security.addProvider(p);
             }
         }
@@ -87,9 +87,9 @@ public final class TLSHUtil {
     public static String bytesToHex(final byte[] bytes) {
         final byte[] hexChars = new byte[bytes.length * 2];
         for (int j = 0; j < bytes.length; j++) {
-            final int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = HEX_LC[v >>> 4];
-            hexChars[j * 2 + 1] = HEX_LC[v & 0x0F];
+            final int value = bytes[j] & 0xFF;
+            hexChars[j * 2] = HEX_LC[value >>> 4];
+            hexChars[j * 2 + 1] = HEX_LC[value & 0x0F];
         }
         return new String(hexChars, StandardCharsets.UTF_8);
     }
@@ -103,9 +103,9 @@ public final class TLSHUtil {
     public static String bytesToHEX(final byte[] bytes) {
         final byte[] hexChars = new byte[bytes.length * 2];
         for (int j = 0; j < bytes.length; j++) {
-            final int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = HEX_UC[v >>> 4];
-            hexChars[j * 2 + 1] = HEX_UC[v & 0x0F];
+            final int value = bytes[j] & 0xFF;
+            hexChars[j * 2] = HEX_UC[value >>> 4];
+            hexChars[j * 2 + 1] = HEX_UC[value & 0x0F];
         }
         return new String(hexChars, StandardCharsets.UTF_8);
     }

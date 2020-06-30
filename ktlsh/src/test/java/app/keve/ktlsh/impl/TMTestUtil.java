@@ -18,6 +18,7 @@ package app.keve.ktlsh.impl;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collection;
@@ -163,27 +164,27 @@ public final class TMTestUtil {
         return get(tlsh, "data_len");
     }
 
-    private static void dump(final Collection<Field> fields, final Object c) {
+    private static void dump(final PrintStream out, final Collection<Field> fields, final Object c) {
         try {
             for (final Field f : fields) {
                 if (f.getType().isArray()) {
                     final Object a = f.get(c);
                     if (a instanceof long[]) {
                         final long[] la = (long[]) a;
-                        System.out.printf("%s[%d]=\n", f.getName(), la.length);
+                        out.printf("%s[%d]=\n", f.getName(), la.length);
                         for (int i = 0; i < la.length; i++) {
                             if (la[i] > 0) {
-                                System.out.printf("%d:%d\n", i, la[i]);
+                                out.printf("%d:%d\n", i, la[i]);
                             }
                         }
                     } else if (a instanceof int[]) {
                         final int[] ia = (int[]) a;
-                        System.out.printf("%s[%d]=%s\n", f.getName(), ia.length, Arrays.toString(ia));
+                        out.printf("%s[%d]=%s\n", f.getName(), ia.length, Arrays.toString(ia));
                     } else {
-                        System.out.printf("%s=%s\n", f.getName(), Arrays.toString((Object[]) a));
+                        out.printf("%s=%s\n", f.getName(), Arrays.toString((Object[]) a));
                     }
                 } else {
-                    System.out.printf("%s=%s\n", f.getName(), f.get(c));
+                    out.printf("%s=%s\n", f.getName(), f.get(c));
                 }
             }
         } catch (final IllegalAccessException e) {
@@ -197,7 +198,7 @@ public final class TMTestUtil {
      * @param c the TlshCreator instance.
      */
     public static void dump(final TlshCreator c) {
-        dump(tlshCreatorFields.values(), c);
+        dump(System.out, tlshCreatorFields.values(), c);
     }
 
     /**
@@ -206,7 +207,7 @@ public final class TMTestUtil {
      * @param tTLSH the Tlsh instance.
      */
     public static void dump(final Tlsh tTLSH) {
-        dump(tlshFields.values(), tTLSH);
+        dump(System.out, tlshFields.values(), tTLSH);
     }
 
     /**

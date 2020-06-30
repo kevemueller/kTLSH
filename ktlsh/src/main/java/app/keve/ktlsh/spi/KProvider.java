@@ -52,16 +52,16 @@ public final class KProvider extends Provider {
                 "Implementation of the TLSH - Trend Locality Sensitive Hash MessageDigest using app.keve.ktlsh.");
 
         final int[] buckets = {128, 256};
-        final int[] checksum = {1, 3};
-        final int[] windowSize = {TLSHDigest4.WINDOW_LENGTH, TLSHDigest5.WINDOW_LENGTH, TLSHDigest6.WINDOW_LENGTH,
+        final int[] checksums = {1, 3};
+        final int[] windowSizes = {TLSHDigest4.WINDOW_LENGTH, TLSHDigest5.WINDOW_LENGTH, TLSHDigest6.WINDOW_LENGTH,
                 TLSHDigest7.WINDOW_LENGTH, TLSHDigest8.WINDOW_LENGTH};
-        for (int i = 0; i < buckets.length; i++) {
-            for (int j = 0; j < checksum.length; j++) {
-                for (int k = 0; k < windowSize.length; k++) {
-                    final String fullName = String.format("TLSH-%d-%d/%d", buckets[i], checksum[j], windowSize[k]);
-                    if (TLSHDigest5.WINDOW_LENGTH == windowSize[k]) {
-                        final String shortName = String.format("TLSH-%d-%d", buckets[i], checksum[j]);
-                        if (1 == checksum[j] && 128 == buckets[i]) {
+        for (int bucket : buckets) {
+            for (int checksum : checksums) {
+                for (int windowSize : windowSizes) {
+                    final String fullName = String.format("TLSH-%d-%d/%d", bucket, checksum, windowSize);
+                    if (TLSHDigest5.WINDOW_LENGTH == windowSize) {
+                        final String shortName = String.format("TLSH-%d-%d", bucket, checksum);
+                        if (1 == checksum && 128 == bucket) {
                             putService(new ProviderService(this, MESSAGE_DIGEST, fullName, MESSAGE_DIGEST_SPI, "TLSH",
                                     shortName));
 
@@ -77,6 +77,12 @@ public final class KProvider extends Provider {
         }
     }
 
+    /**
+     * Provider.Service for TLSH MesageDigest.
+     * 
+     * @author keve
+     *
+     */
     private static final class ProviderService extends Provider.Service {
         /** Regex pattern for implemented algorithms. */
         private static final Pattern ALG_PATTERN = Pattern.compile("TLSH-(128|256)-(1|3)/([4-8])");

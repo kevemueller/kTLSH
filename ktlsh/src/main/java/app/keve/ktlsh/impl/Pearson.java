@@ -59,11 +59,11 @@ public final class Pearson {
      * @return the unsigned byte hash value
      */
     public int hash(final byte[] buf) {
-        int h = 0;
-        for (int i = 0; i < buf.length; i++) {
-            h = t[h ^ buf[i] & 0xFF];
+        int hash = 0;
+        for (final int b : buf) {
+            hash = t[hash ^ b & 0xFF];
         }
-        return h;
+        return hash;
     }
 
     /**
@@ -106,11 +106,11 @@ public final class Pearson {
      * @return the unsigned byte hash value
      */
     public int hash(final int... buf) {
-        int h = 0;
-        for (int i = 0; i < buf.length; i++) {
-            h = t[h ^ buf[i]];
+        int hash = 0;
+        for (final int b : buf) {
+            hash = t[hash ^ b];
         }
-        return h;
+        return hash;
     }
 
     /**
@@ -132,7 +132,8 @@ public final class Pearson {
         final List<Integer> l = IntStream.range(0, 256).boxed().collect(Collectors.toList());
         Collections.shuffle(l);
         int i = 0;
-        for (final Iterator<Integer> it = l.iterator(); it.hasNext();) {
+        final Iterator<Integer> it = l.iterator();
+        while (it.hasNext()) {
             t[i++] = it.next();
         }
 
@@ -149,9 +150,9 @@ public final class Pearson {
         if (256 != t.length || 256 != IntStream.of(t).distinct().count()) {
             throw new IllegalArgumentException("Bad permutation!");
         }
-        for (int i = 0; i < t.length; i++) {
-            if (t[i] < 0 || t[i] >= 256) {
-                throw new IllegalArgumentException("Bad value " + t[i] + ".");
+        for (final int b : t) {
+            if (b < 0 || b >= 256) {
+                throw new IllegalArgumentException("Bad value " + b + ".");
             }
         }
         return new Pearson(t.clone());
@@ -176,8 +177,8 @@ public final class Pearson {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Pearson");
-        sb.append(Arrays.toString(t));
-        return sb.toString();
+        final StringBuffer stringBuffer = new StringBuffer("Pearson");
+        stringBuffer.append(Arrays.toString(t));
+        return stringBuffer.toString();
     }
 }

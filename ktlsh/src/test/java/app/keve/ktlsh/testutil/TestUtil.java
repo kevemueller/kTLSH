@@ -28,8 +28,8 @@ import app.keve.ktlsh.spi.TMProvider;
  * @author keve
  *
  */
-public final class Util {
-    private Util() {
+public final class TestUtil {
+    private TestUtil() {
     }
 
     /**

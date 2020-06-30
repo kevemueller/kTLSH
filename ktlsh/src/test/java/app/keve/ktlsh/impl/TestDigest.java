@@ -29,7 +29,7 @@ import com.trendmicro.tlsh.Tlsh;
 import com.trendmicro.tlsh.TlshCreator;
 
 import app.keve.ktlsh.TLSHUtil;
-import app.keve.ktlsh.testutil.Util;
+import app.keve.ktlsh.testutil.TestUtil;
 
 /**
  * Test digester operation between TM and K implementations.
@@ -37,7 +37,7 @@ import app.keve.ktlsh.testutil.Util;
  * @author keve
  *
  */
-public final class TestDigest {
+public final class TestDigest extends AbstractImplTest {
     /** 64KiB length. */
     private static final int MEDIUM_LENGTH_64KIB = 65536;
 
@@ -55,7 +55,7 @@ public final class TestDigest {
 
     /** Construct the test instance. */
     public TestDigest() throws NoSuchAlgorithmException {
-        rnd = Util.rnd();
+        rnd = TestUtil.rnd();
     }
 
     /**
@@ -100,8 +100,9 @@ public final class TestDigest {
 
         final String kHash = TLSHUtil.encoded(kTLSH.pack());
         final String tHash = tTLSH.toString();
-        System.out.println(kHash);
-        System.out.println(tHash);
+
+        LOGGER.info(kHash);
+        LOGGER.info(tHash);
 
         assertEquals(kHash, tHash);
     }
@@ -119,9 +120,9 @@ public final class TestDigest {
         final byte[] buf = new byte[MEDIUM_LENGTH_32KIB + rnd.nextInt(MEDIUM_LENGTH_64KIB)];
         rnd.nextBytes(buf);
 
-        for (int i = 0; i < buf.length; i++) {
-            kd.update(buf[i]);
-            td.update(new byte[] {buf[i]});
+        for (byte b : buf) {
+            kd.update(b);
+            td.update(new byte[] {b});
         }
 
         TMTestUtil.assertEqualState(td, kd);
@@ -133,8 +134,9 @@ public final class TestDigest {
 
         final String kHash = TLSHUtil.encoded(kTLSH.pack());
         final String tHash = tTLSH.toString();
-        System.out.println(kHash);
-        System.out.println(tHash);
+
+        LOGGER.info(kHash);
+        LOGGER.info(tHash);
 
         assertEquals(kHash, tHash);
     }
@@ -169,8 +171,8 @@ public final class TestDigest {
 
         final String kHash = TLSHUtil.encoded(kTLSH.pack());
         final String tHash = tTLSH.toString();
-        System.out.println(kHash);
-        System.out.println(tHash);
+        LOGGER.info(kHash);
+        LOGGER.info(tHash);
 
         assertEquals(kHash, tHash);
     }
@@ -205,8 +207,8 @@ public final class TestDigest {
 
         final String kHash = TLSHUtil.encoded(kTLSH.pack());
         final String tHash = tTLSH.toString();
-        System.out.println(kHash);
-        System.out.println(tHash);
+        LOGGER.info(kHash);
+        LOGGER.info(tHash);
 
         assertEquals(kHash, tHash);
     }
@@ -220,8 +222,10 @@ public final class TestDigest {
     public void testResource() throws IOException {
         final String resource = "example_data/021106_yossivassa.txt";
         final String expectedEncoded = "1FA1B357F78913B236924271569EA6D1FB2C451C33668484552C812D33138B8C73FFCE";
-        final InputStream in = getClass().getResourceAsStream(BASE + resource);
-        final byte[] buf = in.readAllBytes();
+        final byte[] buf;
+        try (InputStream in = getClass().getResourceAsStream(BASE + resource)) {
+            buf = in.readAllBytes();
+        }
 
         final TLSHDigest kd = TLSHDigest.of();
         final TlshCreator td = new TlshCreator();
@@ -237,8 +241,8 @@ public final class TestDigest {
 
         final String kHash = TLSHUtil.encoded(kTLSH.pack());
         final String tHash = tTLSH.toString();
-        System.out.println(kHash);
-        System.out.println(tHash);
+        LOGGER.info(kHash);
+        LOGGER.info(tHash);
 
         assertEquals(expectedEncoded, tHash);
         assertEquals(expectedEncoded, kHash);

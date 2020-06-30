@@ -39,7 +39,7 @@ import org.junit.jupiter.params.provider.MethodSource;
  *
  */
 @SuppressWarnings("exports") // Surefire needs the public modifier
-public final class TestExampleData {
+public final class TestExampleData extends AbstractTest {
     /** Base directory of the unit test data. */
     private static final String BASE = "/tlsh/Testing/";
 
@@ -48,10 +48,6 @@ public final class TestExampleData {
 
     /** TLSH provider name. */
     private final String provider;
-
-    static {
-        TLSHUtil.registerProvider();
-    }
 
     /** Construct test class instance, assign provider to be used. */
     public TestExampleData() {
@@ -73,11 +69,12 @@ public final class TestExampleData {
     public void testCsv(final String resourceName, final String expectedHash)
             throws IOException, NoSuchAlgorithmException, NoSuchProviderException {
         final MessageDigest md = MessageDigest.getInstance("TLSH", provider);
-        final InputStream resource = resourceStream(resourceName);
-        final byte[] buf = resource.readAllBytes();
-        final byte[] hash = md.digest(buf);
-        final String encodedHash = TLSHUtil.encoded(hash);
-        assertEquals(expectedHash, encodedHash);
+        try (InputStream resource = resourceStream(resourceName)) {
+            final byte[] buf = resource.readAllBytes();
+            final byte[] hash = md.digest(buf);
+            final String encodedHash = TLSHUtil.encoded(hash);
+            assertEquals(expectedHash, encodedHash);
+        }
     }
 
     private String formatAlg(final String bits, final String check) {
@@ -101,12 +98,13 @@ public final class TestExampleData {
     public void testExpLen(final String resourceGroup, final String bits, final String check, final String resourceName,
             final String expectedHash) throws IOException, NoSuchAlgorithmException, NoSuchProviderException {
         final MessageDigest mdx = MessageDigest.getInstance(formatAlg(bits, check), provider);
-        final InputStream resource = resourceStream(resourceName);
-        final byte[] buf = resource.readAllBytes();
-        final byte[] hash = mdx.digest(buf);
-        final String encodedHash = "128".equals(bits) && "1".equals(check) ? TLSHUtil.encodedT1(hash)
-                : TLSHUtil.encoded(hash);
-        assertEquals(expectedHash, encodedHash);
+        try (InputStream resource = resourceStream(resourceName)) {
+            final byte[] buf = resource.readAllBytes();
+            final byte[] hash = mdx.digest(buf);
+            final String encodedHash = "128".equals(bits) && "1".equals(check) ? TLSHUtil.encodedT1(hash)
+                    : TLSHUtil.encoded(hash);
+            assertEquals(expectedHash, encodedHash);
+        }
     }
 
     private int getScore(final MessageDigest mdx, final InputStream resource1, final InputStream resource2,
@@ -137,10 +135,11 @@ public final class TestExampleData {
             final String resource1Name, final String resource2Name, final int expectedScore)
             throws IOException, NoSuchAlgorithmException, NoSuchProviderException {
         final MessageDigest mdx = MessageDigest.getInstance(formatAlg(bits, check), provider);
-        final InputStream resource1 = resourceStream(resource1Name);
-        final InputStream resource2 = resourceStream(resource2Name);
-        final int score = getScore(mdx, resource1, resource2, true);
-        assertEquals(expectedScore, score);
+        try (InputStream resource1 = resourceStream(resource1Name);
+                InputStream resource2 = resourceStream(resource2Name)) {
+            final int score = getScore(mdx, resource1, resource2, true);
+            assertEquals(expectedScore, score);
+        }
     }
 
     /**
@@ -162,10 +161,11 @@ public final class TestExampleData {
             final String resource1Name, final String resource2Name, final int expectedScore)
             throws IOException, NoSuchAlgorithmException, NoSuchProviderException {
         final MessageDigest mdx = MessageDigest.getInstance(formatAlg(bits, check), provider);
-        final InputStream resource1 = resourceStream(resource1Name);
-        final InputStream resource2 = resourceStream(resource2Name);
-        final int score = getScore(mdx, resource1, resource2, true);
-        assertEquals(expectedScore, score);
+        try (InputStream resource1 = resourceStream(resource1Name);
+                InputStream resource2 = resourceStream(resource2Name)) {
+            final int score = getScore(mdx, resource1, resource2, true);
+            assertEquals(expectedScore, score);
+        }
     }
 
     /**
@@ -187,10 +187,11 @@ public final class TestExampleData {
             final String resource1Name, final String resource2Name, final int expectedScore)
             throws IOException, NoSuchAlgorithmException, NoSuchProviderException {
         final MessageDigest mdx = MessageDigest.getInstance(formatAlg(bits, check), provider);
-        final InputStream resource1 = resourceStream(resource1Name);
-        final InputStream resource2 = resourceStream(resource2Name);
-        final int score = getScore(mdx, resource1, resource2, false);
-        assertEquals(expectedScore, score);
+        try (InputStream resource1 = resourceStream(resource1Name);
+                InputStream resource2 = resourceStream(resource2Name)) {
+            final int score = getScore(mdx, resource1, resource2, false);
+            assertEquals(expectedScore, score);
+        }
     }
 
     /**
@@ -212,10 +213,11 @@ public final class TestExampleData {
             final String resource1Name, final String resource2Name, final int expectedScore)
             throws IOException, NoSuchAlgorithmException, NoSuchProviderException {
         final MessageDigest mdx = MessageDigest.getInstance(formatAlg(bits, check), provider);
-        final InputStream resource1 = resourceStream(resource1Name);
-        final InputStream resource2 = resourceStream(resource2Name);
-        final int score = getScore(mdx, resource1, resource2, false);
-        assertEquals(expectedScore, score);
+        try (InputStream resource1 = resourceStream(resource1Name);
+                InputStream resource2 = resourceStream(resource2Name)) {
+            final int score = getScore(mdx, resource1, resource2, false);
+            assertEquals(expectedScore, score);
+        }
     }
 
     /**

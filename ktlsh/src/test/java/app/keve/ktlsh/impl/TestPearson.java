@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
  * @author keve
  *
  */
-public class TestPearson {
+public class TestPearson extends AbstractImplTest {
     /**
      * Test Pearson default instance.
      */
@@ -64,7 +64,7 @@ public class TestPearson {
     @Test
     public void testRandomInstance() {
         final Pearson p = Pearson.randomInstance();
-        System.out.println(p);
+        LOGGER.info("{}", p);
         assertEquals(256, IntStream.of(p.t).distinct().count());
     }
 
@@ -88,7 +88,8 @@ public class TestPearson {
         Collections.shuffle(l);
         final int[] t = new int[256];
         int i = 0;
-        for (final Iterator<Integer> it = l.iterator(); it.hasNext();) {
+        final Iterator<Integer> it = l.iterator();
+        while (it.hasNext()) {
             t[i++] = it.next();
         }
 
@@ -106,7 +107,8 @@ public class TestPearson {
         Collections.shuffle(l);
         final int[] t = new int[256];
         int i = 0;
-        for (final Iterator<Integer> it = l.iterator(); it.hasNext();) {
+        final Iterator<Integer> it = l.iterator();
+        while (it.hasNext()) {
             t[i++] = it.next();
         }
 

@@ -35,7 +35,7 @@ import app.keve.ktlsh.impl.TLSHDigest5;
 import app.keve.ktlsh.impl.TLSHDigest6;
 import app.keve.ktlsh.impl.TLSHDigest7;
 import app.keve.ktlsh.impl.TLSHDigest8;
-import app.keve.ktlsh.testutil.Util;
+import app.keve.ktlsh.testutil.TestUtil;
 
 /**
  * The registering and retrieving the providers.
@@ -43,7 +43,7 @@ import app.keve.ktlsh.testutil.Util;
  * @author keve
  *
  */
-public final class TestProvider {
+public final class TestProvider extends AbstractTest {
     /** Random bits. */
     private static final int AA = 0xAA;
     /** The default TLSH algorithm name. */
@@ -90,7 +90,7 @@ public final class TestProvider {
                                     + "15890DFE6832BBFA897E7B240B91BDD5648E290143747108431A59C66D785FE5"}}};
 
     static {
-        Util.registerProvider();
+        TestUtil.registerProvider();
     }
 
     /**
@@ -101,8 +101,9 @@ public final class TestProvider {
         final Provider p = Security.getProvider(TLSHUtil.providerNameK());
         assertNotNull(p);
 
-        System.out.println("KeveAppProvider provider name is " + p.getName());
-        System.out.println("KeveAppProvider provider info is " + p.getInfo());
+        LOGGER.info("KProvider provider name is {}", p.getName());
+        LOGGER.info("KProvider provider info is {}", p.getInfo());
+        assertEquals(TLSHUtil.providerNameK(), p.getName());
     }
 
     /**
@@ -113,17 +114,20 @@ public final class TestProvider {
         MessageDigest mdTLSH = MessageDigest.getInstance(TLSH, TLSHUtil.providerNameK());
         assertNotNull(mdTLSH);
 
-        System.out.println("TLSH provider " + mdTLSH.getProvider());
-        System.out.println("TLSH algname " + mdTLSH.getAlgorithm());
-        System.out.println("TLSH length " + mdTLSH.getDigestLength());
+        LOGGER.info("TLSH provider K {}", mdTLSH.getProvider());
+        LOGGER.info("TLSH algname K {}", mdTLSH.getAlgorithm());
+        LOGGER.info("TLSH length K {}", mdTLSH.getDigestLength());
+        assertEquals(TLSHUtil.providerNameK(), mdTLSH.getProvider().getName());
+        assertEquals(TLSH, mdTLSH.getAlgorithm());
 
-        mdTLSH = MessageDigest.getInstance(TLSH, Util.providerNameTM());
+        mdTLSH = MessageDigest.getInstance(TLSH, TestUtil.providerNameTM());
         assertNotNull(mdTLSH);
 
-        System.out.println("TLSH provider " + mdTLSH.getProvider());
-        System.out.println("TLSH algname " + mdTLSH.getAlgorithm());
-        System.out.println("TLSH length " + mdTLSH.getDigestLength());
-
+        LOGGER.info("TLSH provider TM {}", mdTLSH.getProvider());
+        LOGGER.info("TLSH algname TM {}", mdTLSH.getAlgorithm());
+        LOGGER.info("TLSH length TM {}", mdTLSH.getDigestLength());
+        assertEquals(TestUtil.providerNameTM(), mdTLSH.getProvider().getName());
+        assertEquals(TLSH, mdTLSH.getAlgorithm());
     }
 
     /**
@@ -132,18 +136,18 @@ public final class TestProvider {
     @Test
     public void testAllInstances() throws NoSuchAlgorithmException, NoSuchProviderException {
         final int[] buckets = {128, 256};
-        final int[] checksum = {1, 3};
-        final String[] provider = {TLSHUtil.providerNameK(), Util.providerNameTM()};
+        final int[] checksums = {1, 3};
+        final String[] providers = {TLSHUtil.providerNameK(), TestUtil.providerNameTM()};
 
-        for (int i = 0; i < buckets.length; i++) {
-            for (int j = 0; j < checksum.length; j++) {
-                for (int k = 0; k < provider.length; k++) {
-                    final String algorithm = String.format("TLSH-%d-%d", buckets[i], checksum[j]);
-                    final MessageDigest md = MessageDigest.getInstance(algorithm, provider[k]);
+        for (int bucket : buckets) {
+            for (int checksum : checksums) {
+                for (String provider : providers) {
+                    final String algorithm = String.format("TLSH-%d-%d", bucket, checksum);
+                    final MessageDigest md = MessageDigest.getInstance(algorithm, provider);
                     assertNotNull(md);
                     assertEquals(algorithm, md.getAlgorithm());
-                    assertEquals(provider[k], md.getProvider().getName());
-                    assertEquals(checksum[j] + 2 + buckets[i] / 8 * 2, md.getDigestLength());
+                    assertEquals(provider, md.getProvider().getName());
+                    assertEquals(checksum + 2 + bucket / 8 * 2, md.getDigestLength());
                 }
             }
         }
@@ -155,19 +159,19 @@ public final class TestProvider {
     @Test
     public void testWindowSize() throws NoSuchAlgorithmException, NoSuchProviderException {
         final int[] buckets = {128, 256};
-        final int[] checksum = {1, 3};
-        final int[] windowSize = {TLSHDigest4.WINDOW_LENGTH, TLSHDigest5.WINDOW_LENGTH, TLSHDigest6.WINDOW_LENGTH,
+        final int[] checksums = {1, 3};
+        final int[] windowSizes = {TLSHDigest4.WINDOW_LENGTH, TLSHDigest5.WINDOW_LENGTH, TLSHDigest6.WINDOW_LENGTH,
                 TLSHDigest7.WINDOW_LENGTH, TLSHDigest8.WINDOW_LENGTH};
 
-        for (int i = 0; i < buckets.length; i++) {
-            for (int j = 0; j < checksum.length; j++) {
-                for (int k = 0; k < windowSize.length; k++) {
-                    final String algorithm = String.format("TLSH-%d-%d/%d", buckets[i], checksum[j], windowSize[k]);
+        for (int bucket : buckets) {
+            for (int checksum : checksums) {
+                for (int windowSize : windowSizes) {
+                    final String algorithm = String.format("TLSH-%d-%d/%d", bucket, checksum, windowSize);
                     final MessageDigest md = MessageDigest.getInstance(algorithm, TLSHUtil.providerNameK());
                     assertNotNull(md);
                     assertEquals(algorithm, md.getAlgorithm());
                     assertEquals(TLSHUtil.providerNameK(), md.getProvider().getName());
-                    assertEquals(checksum[j] + 2 + buckets[i] / 8 * 2, md.getDigestLength());
+                    assertEquals(checksum + 2 + bucket / 8 * 2, md.getDigestLength());
                 }
             }
         }
@@ -184,7 +188,7 @@ public final class TestProvider {
         final MessageDigest mdTLSH = MessageDigest.getInstance(TLSH, provider);
         assertNotNull(mdTLSH);
 
-        final SecureRandom rnd = Util.rnd();
+        final SecureRandom rnd = TestUtil.rnd();
         final byte[] buf = new byte[rnd.nextInt(MEDIUM_SIZE)];
         rnd.nextBytes(buf);
         final byte[] hash1 = mdTLSH.digest(buf);
@@ -216,7 +220,7 @@ public final class TestProvider {
         final byte[] hash1 = mdTLSH.digest(buf);
         assertNotNull(hash1);
 
-        System.out.println(TLSHUtil.encoded(hash1));
+        LOGGER.info(TLSHUtil.encoded(hash1));
 
         final byte[] hash2 = mdTLSH.digest(buf);
         assertNotNull(hash2);
@@ -253,7 +257,7 @@ public final class TestProvider {
                     final byte[] kHash = md.digest(referenceInput);
 
                     if (TLSHDigest5.WINDOW_LENGTH == windowSize[k]) {
-                        final MessageDigest td = MessageDigest.getInstance(algorithm, Util.providerNameTM());
+                        final MessageDigest td = MessageDigest.getInstance(algorithm, TestUtil.providerNameTM());
                         final byte[] tmHash = td.digest(referenceInput);
                         assertArrayEquals(tmHash, kHash, "@" + algorithm);
                     }

@@ -39,6 +39,7 @@ public final class TLSHMessageDigestSpiK extends MessageDigestSpi {
     }
 
     TLSHMessageDigestSpiK(final int windowLength, final int bucketCount, final int checksumLength) {
+        super();
         impl = TLSHDigest.of(windowLength, bucketCount, checksumLength);
         final int l = bucketCount / 2 + checksumLength * 2 + 4;
         this.digestLength = l / 2;
