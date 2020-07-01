@@ -95,6 +95,7 @@ public final class TestProvider extends AbstractTest {
 
     /**
      * Test obtaining the provider.
+     * 
      */
     @Test
     public void testProvider() {

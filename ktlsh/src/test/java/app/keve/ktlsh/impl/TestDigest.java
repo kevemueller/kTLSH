@@ -22,9 +22,15 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
+import com.trendmicro.tlsh.BucketOption;
+import com.trendmicro.tlsh.ChecksumOption;
 import com.trendmicro.tlsh.Tlsh;
 import com.trendmicro.tlsh.TlshCreator;
 
@@ -59,13 +65,26 @@ public final class TestDigest extends AbstractImplTest {
     }
 
     /**
+     * Factory for arguments of buckets x checksum.
+     * 
+     * @return all possible combinations of bucket x checksum.
+     */
+    public static Stream<Arguments> bc() {
+        return Stream.of(Arguments.of(128, 1), Arguments.of(128, 3), Arguments.of(256, 1), Arguments.of(256, 3));
+    }
+
+    /**
      * Test matching state on incremental update.
      * 
+     * @param buckets  the number of buckets.
+     * @param checksum the number of checksum bytes.
      */
-    @Test
-    public void testUpdate() {
-        final TLSHDigest kd = TLSHDigest.of();
-        final TlshCreator td = new TlshCreator();
+    @ParameterizedTest
+    @MethodSource("bc")
+    public void testUpdate(final int buckets, final int checksum) {
+        final TLSHDigest kd = TLSHDigest.of(5, buckets, checksum);
+        final TlshCreator td = new TlshCreator(128 == buckets ? BucketOption.BUCKETS_128 : BucketOption.BUCKETS_256,
+                1 == checksum ? ChecksumOption.CHECKSUM_1B : ChecksumOption.CHECKSUM_3B);
 
         for (byte i = 1; i < 8; i++) {
             kd.update(i);
@@ -78,12 +97,15 @@ public final class TestDigest extends AbstractImplTest {
     /**
      * Test matching state on full update.
      * 
-     * @throws NoSuchAlgorithmException if the TLSH algorithm is not registered
+     * @param buckets  the number of buckets.
+     * @param checksum the number of checksum bytes.
      */
-    @Test
-    public void testDigestFull() throws NoSuchAlgorithmException {
-        final TLSHDigest kd = TLSHDigest.of();
-        final TlshCreator td = new TlshCreator();
+    @ParameterizedTest
+    @MethodSource("bc")
+    public void testDigestFull(final int buckets, final int checksum) {
+        final TLSHDigest kd = TLSHDigest.of(5, buckets, checksum);
+        final TlshCreator td = new TlshCreator(128 == buckets ? BucketOption.BUCKETS_128 : BucketOption.BUCKETS_256,
+                1 == checksum ? ChecksumOption.CHECKSUM_1B : ChecksumOption.CHECKSUM_3B);
 
         final byte[] buf = new byte[MEDIUM_LENGTH_32KIB + rnd.nextInt(MEDIUM_LENGTH_64KIB)];
         rnd.nextBytes(buf);
@@ -110,12 +132,15 @@ public final class TestDigest extends AbstractImplTest {
     /**
      * Incremental updates with single byte.
      * 
-     * @throws NoSuchAlgorithmException if the TLSH algorithm is not registered
+     * @param buckets  the number of buckets.
+     * @param checksum the number of checksum bytes.
      */
-    @Test
-    public void testDigest1() throws NoSuchAlgorithmException {
-        final TLSHDigest kd = TLSHDigest.of();
-        final TlshCreator td = new TlshCreator();
+    @ParameterizedTest
+    @MethodSource("bc")
+    public void testDigest1(final int buckets, final int checksum) {
+        final TLSHDigest kd = TLSHDigest.of(5, buckets, checksum);
+        final TlshCreator td = new TlshCreator(128 == buckets ? BucketOption.BUCKETS_128 : BucketOption.BUCKETS_256,
+                1 == checksum ? ChecksumOption.CHECKSUM_1B : ChecksumOption.CHECKSUM_3B);
 
         final byte[] buf = new byte[MEDIUM_LENGTH_32KIB + rnd.nextInt(MEDIUM_LENGTH_64KIB)];
         rnd.nextBytes(buf);
@@ -144,12 +169,15 @@ public final class TestDigest extends AbstractImplTest {
     /**
      * Incremental updates with smaller than windowsize buffers.
      * 
-     * @throws NoSuchAlgorithmException if the TLSH algorithm is not registered
+     * @param buckets  the number of buckets.
+     * @param checksum the number of checksum bytes.
      */
-    @Test
-    public void testDigestSmall() throws NoSuchAlgorithmException {
-        final TLSHDigest kd = TLSHDigest.of();
-        final TlshCreator td = new TlshCreator();
+    @ParameterizedTest
+    @MethodSource("bc")
+    public void testDigestSmall(final int buckets, final int checksum) {
+        final TLSHDigest kd = TLSHDigest.of(5, buckets, checksum);
+        final TlshCreator td = new TlshCreator(128 == buckets ? BucketOption.BUCKETS_128 : BucketOption.BUCKETS_256,
+                1 == checksum ? ChecksumOption.CHECKSUM_1B : ChecksumOption.CHECKSUM_3B);
 
         final byte[] buf = new byte[MEDIUM_LENGTH_32KIB + rnd.nextInt(MEDIUM_LENGTH_64KIB)];
         rnd.nextBytes(buf);
@@ -180,12 +208,15 @@ public final class TestDigest extends AbstractImplTest {
     /**
      * Incremental updates with medium sized buffers.
      * 
-     * @throws NoSuchAlgorithmException if the TLSH algorithm is not registered
+     * @param buckets  the number of buckets.
+     * @param checksum the number of checksum bytes.
      */
-    @Test
-    public void testDigestMedium() throws NoSuchAlgorithmException {
-        final TLSHDigest kd = TLSHDigest.of();
-        final TlshCreator td = new TlshCreator();
+    @ParameterizedTest
+    @MethodSource("bc")
+    public void testDigestMedium(final int buckets, final int checksum) {
+        final TLSHDigest kd = TLSHDigest.of(5, buckets, checksum);
+        final TlshCreator td = new TlshCreator(128 == buckets ? BucketOption.BUCKETS_128 : BucketOption.BUCKETS_256,
+                1 == checksum ? ChecksumOption.CHECKSUM_1B : ChecksumOption.CHECKSUM_3B);
 
         final byte[] buf = new byte[MEDIUM_LENGTH_32KIB + rnd.nextInt(MEDIUM_LENGTH_64KIB)];
         rnd.nextBytes(buf);

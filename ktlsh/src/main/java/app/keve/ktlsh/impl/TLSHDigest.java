@@ -31,7 +31,7 @@ public interface TLSHDigest {
      * @param b the byte
      */
     default void update(final byte b) {
-        update(ByteBuffer.allocate(1).put(b).flip());
+        update(ByteBuffer.wrap(new byte[] {b}));
     }
 
     /**

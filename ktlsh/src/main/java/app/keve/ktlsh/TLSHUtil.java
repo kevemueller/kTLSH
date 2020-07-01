@@ -31,10 +31,6 @@ import app.keve.ktlsh.spi.KProvider;
  */
 public final class TLSHUtil {
     /**
-     * Lookup table for lower case hex characters.
-     */
-    private static final byte[] HEX_LC = "0123456789abcdef".getBytes(StandardCharsets.US_ASCII);
-    /**
      * Lookup table for upper case hex characters.
      */
     private static final byte[] HEX_UC = "0123456789ABCDEF".getBytes(StandardCharsets.US_ASCII);
@@ -76,22 +72,6 @@ public final class TLSHUtil {
             data[i / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4) + Character.digit(hex.charAt(i + 1), 16));
         }
         return data;
-    }
-
-    /**
-     * Convert a byte buffer to lower case hex character string.
-     * 
-     * @param bytes the buffer
-     * @return the hex string
-     */
-    public static String bytesToHex(final byte[] bytes) {
-        final byte[] hexChars = new byte[bytes.length * 2];
-        for (int j = 0; j < bytes.length; j++) {
-            final int value = bytes[j] & 0xFF;
-            hexChars[j * 2] = HEX_LC[value >>> 4];
-            hexChars[j * 2 + 1] = HEX_LC[value & 0x0F];
-        }
-        return new String(hexChars, StandardCharsets.UTF_8);
     }
 
     /**

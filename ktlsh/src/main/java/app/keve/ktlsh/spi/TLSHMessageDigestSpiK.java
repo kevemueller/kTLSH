@@ -20,7 +20,6 @@ import java.security.MessageDigestSpi;
 
 import app.keve.ktlsh.impl.TLSH;
 import app.keve.ktlsh.impl.TLSHDigest;
-import app.keve.ktlsh.impl.TLSHDigest5;
 
 /**
  * The Service Provider for the kTLSH implementation.
@@ -33,10 +32,6 @@ public final class TLSHMessageDigestSpiK extends MessageDigestSpi {
     private final TLSHDigest impl;
     /** The precomputed length of the digest buffer. */
     private final int digestLength;
-
-    TLSHMessageDigestSpiK() {
-        this(TLSHDigest5.WINDOW_LENGTH, 128, 1);
-    }
 
     TLSHMessageDigestSpiK(final int windowLength, final int bucketCount, final int checksumLength) {
         super();

@@ -28,4 +28,6 @@ public abstract class AbstractImplTest {
     /** Logger instance. */
     protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractImplTest.class);
 
+    /** KiB multiplier. */
+    protected static final int KIB = 1024;
 }

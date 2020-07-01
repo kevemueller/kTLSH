@@ -400,7 +400,8 @@ public final class TLSH {
             checksumLength = 3;
             break;
         default:
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(
+                    String.format("Illegal hash buffer length: %d, must be one of 35,37,67,69", hash.length));
         }
 
         final ByteBuffer buf = ByteBuffer.wrap(hash);

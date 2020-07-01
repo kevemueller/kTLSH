@@ -17,6 +17,7 @@ package app.keve.ktlsh.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Collections;
@@ -59,6 +60,40 @@ public class TestPearson extends AbstractImplTest {
     }
 
     /**
+     * Test Pearson default instance hashing 2 bytes.
+     */
+    @Test
+    public void testHash2Byte() {
+        final Pearson p = Pearson.defaultInstance();
+        for (int i = 0; i < 256 - 1; i++) {
+            assertEquals(p.hash(p.hash(i) ^ (i + 1)), p.hash(i, i + 1));
+        }
+    }
+
+    /**
+     * Test Pearson default instance hashing 3 bytes.
+     */
+    @Test
+    public void testHash3Byte() {
+        final Pearson p = Pearson.defaultInstance();
+        for (int i = 0; i < 256 - 2; i++) {
+            assertEquals(p.hash(p.hash(p.hash(i) ^ (i + 1)) ^ (i + 2)), p.hash(i, i + 1, i + 2));
+        }
+    }
+
+    /**
+     * Test Pearson default instance hashing 4 bytes.
+     */
+    @Test
+    public void testHash4Byte() {
+        final Pearson p = Pearson.defaultInstance();
+        for (int i = 0; i < 256 - 3; i++) {
+            assertEquals(p.hash(p.hash(p.hash(p.hash(i) ^ (i + 1)) ^ (i + 2)) ^ (i + 3)),
+                    p.hash(i, i + 1, i + 2, i + 3));
+        }
+    }
+
+    /**
      * Test Pearson random instance.
      */
     @Test
@@ -76,7 +111,20 @@ public class TestPearson extends AbstractImplTest {
         assertEquals(Pearson.defaultInstance(), Pearson.of(Pearson.T));
         final Pearson p = Pearson.randomInstance();
         assertFalse(Pearson.defaultInstance().equals(p));
+        assertEquals(p, p);
+        assertNotEquals(p, "Hello World!");
         assertEquals(p, Pearson.of(p.t));
+
+        assertEquals(p.hashCode(), Pearson.of(p.t).hashCode());
+    }
+
+    /**
+     * Test Pearson providing erroneous array.
+     */
+    @Test
+    public void testBadLength() {
+        final int[] t = new int[255];
+        assertThrows(IllegalArgumentException.class, () -> Pearson.of(t));
     }
 
     /**

@@ -63,20 +63,21 @@ public final class TLSHDigest5 extends AbstractTLSHDigest {
             final int l0 = buf.get() & 0xFF;
             count++;
             switch (checkSumLength) {
-            case 1:
-                checksum[0] = sMapping(T0, l0, l1, checksum[0]);
-                break;
+//            case 1:
+//                checksum[0] = sMapping(T0, l0, l1, checksum[0]);
+//                break;
             case 3:
                 checksum[0] = sMapping(T0, l0, l1, checksum[0]);
                 checksum[1] = bMapping(checksum[0], l0, l1, checksum[1]);
                 checksum[2] = bMapping(checksum[1], l0, l1, checksum[2]);
                 break;
             default:
-                checksum[0] = sMapping(T0, l0, l1, checksum[0]);
-                for (int k = 1; k < checksum.length; k++) {
-                    checksum[k] = bMapping(checksum[k - 1], l0, l1, checksum[k]);
-                }
-                break;
+//                checksum[0] = sMapping(T0, l0, l1, checksum[0]);
+//                for (int k = 1; k < checksum.length; k++) {
+//                    checksum[k] = bMapping(checksum[k - 1], l0, l1, checksum[k]);
+//                }
+//                break;
+                throw new IllegalArgumentException("impossible");
             }
             aBucket[sMapping(T2, l0, l1, l2)]++;
             aBucket[sMapping(T3, l0, l1, l3)]++;

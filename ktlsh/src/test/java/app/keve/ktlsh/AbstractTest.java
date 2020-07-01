@@ -28,6 +28,9 @@ public abstract class AbstractTest {
     /** Logger instance. */
     protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractTest.class);
 
+    /** KiB multiplier. */
+    protected static final int KIB = 1024;
+
     static {
         TLSHUtil.registerProvider();
     }

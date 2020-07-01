@@ -145,6 +145,16 @@ public final class TMTestUtil {
     }
 
     /**
+     * get TlshCreator.slide_window.
+     * 
+     * @param tlsh the TlshCreator instance
+     * @return the value of the slide_window field.
+     */
+    public static int[] getSlideWindow(final TlshCreator tlsh) {
+        return get(tlsh, "slide_window");
+    }
+
+    /**
      * get TlshCreator.checksumArray.
      * 
      * @param tlsh the TlshCreator instance
@@ -225,7 +235,18 @@ public final class TMTestUtil {
         } else {
             assertArrayEquals(getChecksumArray(tlsh), akd.checksum);
         }
-        assertEquals(getDataLen(tlsh), akd.count);
+        final int dataLen = getDataLen(tlsh);
+        assertEquals(dataLen, akd.count);
+        final int[] lag = akd.getLag();
+        final int[] slideWindow = getSlideWindow(tlsh);
+
+        final int[] lagWindow = new int[slideWindow.length - 1];
+        final int j = dataLen % slideWindow.length;
+        for (int i = 1; i < slideWindow.length; i++) {
+            final int ji = (j - i + slideWindow.length) % slideWindow.length;
+            lagWindow[i - 1] = slideWindow[ji];
+        }
+        assertArrayEquals(lagWindow, lag);
     }
 
     /**

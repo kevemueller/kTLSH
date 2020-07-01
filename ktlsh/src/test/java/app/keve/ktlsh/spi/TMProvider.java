@@ -15,6 +15,7 @@
  */
 package app.keve.ktlsh.spi;
 
+import java.security.MessageDigestSpi;
 import java.security.NoSuchAlgorithmException;
 import java.security.Provider;
 import java.security.ProviderException;
@@ -50,8 +51,7 @@ public final class TMProvider extends Provider {
         super(NAME, "3.7.1",
                 "Implementation of the TLSH - Trend Locality Sensitive Hash MessageDigest using com.trendmicro.tlsh.");
 
-        putService(
-                new ProviderService(this, MESSAGE_DIGEST, "TLSH-128-1/5", MESSAGE_DIGEST_SPI, "TLSH-128-1", "TLSH"));
+        putService(new ProviderService(this, MESSAGE_DIGEST, "TLSH-128-1/5", MESSAGE_DIGEST_SPI, "TLSH-128-1", "TLSH"));
         putService(new ProviderService(this, MESSAGE_DIGEST, "TLSH-128-3/5", MESSAGE_DIGEST_SPI, "TLSH-128-3"));
         putService(new ProviderService(this, MESSAGE_DIGEST, "TLSH-256-1/5", MESSAGE_DIGEST_SPI, "TLSH-256-1"));
         putService(new ProviderService(this, MESSAGE_DIGEST, "TLSH-256-3/5", MESSAGE_DIGEST_SPI, "TLSH-256-3"));
@@ -66,26 +66,23 @@ public final class TMProvider extends Provider {
             super(p, type, algo, cn, List.of(aliases), null);
         }
 
-        @SuppressWarnings("checkstyle:IllegalCatch")
         @Override
-        public Object newInstance(final Object ctrParamObj) throws NoSuchAlgorithmException {
-            final String type = getType();
-            final String algo = getAlgorithm();
-            try {
-                if (MESSAGE_DIGEST.equals(type)) {
-                    final Matcher matcher = ALG_PATTERN.matcher(algo);
-                    if (matcher.matches()) {
-                        final BucketOption bucketOption = BucketOption.valueOf("BUCKETS_" + matcher.group(1));
-                        final ChecksumOption checksumOption = ChecksumOption
-                                .valueOf("CHECKSUM_" + matcher.group(2) + "B");
-                        return new TLSHMessageDigestSpiTM(bucketOption, checksumOption);
-                    }
-                }
-            } catch (final Exception ex) {
-                throw new NoSuchAlgorithmException("Error constructing " + type + " for " + algo + " using TMProvider",
-                        ex);
+        public MessageDigestSpi newInstance(final Object ctrParamObj) throws NoSuchAlgorithmException {
+            // We are only creating MessageDigest instances of this factory.
+            assert MESSAGE_DIGEST.equals(getType());
+//           try {
+            final Matcher matcher = ALG_PATTERN.matcher(getAlgorithm());
+            if (matcher.matches()) {
+                final BucketOption bucketOption = BucketOption.valueOf("BUCKETS_" + matcher.group(1));
+                final ChecksumOption checksumOption = ChecksumOption.valueOf("CHECKSUM_" + matcher.group(2) + "B");
+                return new TLSHMessageDigestSpiTM(bucketOption, checksumOption);
             }
-            throw new ProviderException("No impl for " + algo + " " + type);
+//                } catch (final Exception ex) {
+//                throw new NoSuchAlgorithmException("Error constructing " + type + " for " + algo + " using TMProvider",
+//                        ex);
+//            }
+            throw new ProviderException(
+                    String.format("No impl for %s %s in %s", getType(), getAlgorithm(), getClass().getName()));
         }
     }
 }

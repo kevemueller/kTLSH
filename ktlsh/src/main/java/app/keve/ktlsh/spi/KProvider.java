@@ -15,6 +15,7 @@
  */
 package app.keve.ktlsh.spi;
 
+import java.security.MessageDigestSpi;
 import java.security.NoSuchAlgorithmException;
 import java.security.Provider;
 import java.security.ProviderException;
@@ -84,7 +85,7 @@ public final class KProvider extends Provider {
      *
      */
     private static final class ProviderService extends Provider.Service {
-        /** Regex pattern for implemented algorithms. */
+        /** Regexp pattern for implemented algorithms. */
         private static final Pattern ALG_PATTERN = Pattern.compile("TLSH-(128|256)-(1|3)/([4-8])");
 
         ProviderService(final Provider p, final String type, final String algo, final String cn,
@@ -92,26 +93,27 @@ public final class KProvider extends Provider {
             super(p, type, algo, cn, List.of(aliases), null);
         }
 
-        @SuppressWarnings("checkstyle:IllegalCatch")
         @Override
-        public Object newInstance(final Object ctrParamObj) throws NoSuchAlgorithmException {
-            final String type = getType();
-            final String algo = getAlgorithm();
-            try {
-                if (MESSAGE_DIGEST.equals(type)) {
-                    final Matcher matcher = ALG_PATTERN.matcher(algo);
-                    if (matcher.matches()) {
-                        final int bucketCount = Integer.valueOf(matcher.group(1));
-                        final int checksumCount = Integer.valueOf(matcher.group(2));
-                        final int windowSize = Integer.valueOf(matcher.group(3));
-                        return new TLSHMessageDigestSpiK(windowSize, bucketCount, checksumCount);
-                    }
-                }
-            } catch (final Exception ex) {
-                throw new NoSuchAlgorithmException("Error constructing " + type + " for " + algo + " using " + NAME,
-                        ex);
+        public MessageDigestSpi newInstance(final Object ctrParamObj) throws NoSuchAlgorithmException {
+            // We are only creating MessageDigest instances of this factory.
+            assert MESSAGE_DIGEST.equals(getType());
+//            try {
+            final Matcher matcher = ALG_PATTERN.matcher(getAlgorithm());
+            if (matcher.matches()) {
+                final int bucketCount = Integer.valueOf(matcher.group(1));
+                final int checksumCount = Integer.valueOf(matcher.group(2));
+                final int windowSize = Integer.valueOf(matcher.group(3));
+                return new TLSHMessageDigestSpiK(windowSize, bucketCount, checksumCount);
             }
-            throw new ProviderException("No impl for " + algo + " " + type);
+//            } catch (final Exception ex) {
+//                throw new NoSuchAlgorithmException("Error constructing " + type + " for " + algo + " using " + NAME,
+//                        ex);
+//            }
+            // this line is very hard to reach, it would mean we have a mistake in
+            // constructing fullName in KProvider constructor
+            // or Java code calls us with bogus parameters.
+            throw new ProviderException(
+                    String.format("No impl for %s %s in %s", getType(), getAlgorithm(), getClass().getName()));
         }
     }
 }

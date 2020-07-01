@@ -44,10 +44,8 @@ import app.keve.ktlsh.testutil.TestUtil;
  * @author keve
  *
  */
-public final class TestEncoding {
-    /** KiB multiplier. */
-    private static final int KIB = 1024;
-
+public final class TestEncoding extends AbstractImplTest {
+ 
     private static final class SampleData {
         /** random byte buffer. */
         public final byte[] buf;
