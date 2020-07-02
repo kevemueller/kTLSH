@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import app.keve.ktlsh.impl.TLSH;
 import app.keve.ktlsh.impl.TLSHDigest4;
 import app.keve.ktlsh.impl.TLSHDigest5;
 import app.keve.ktlsh.impl.TLSHDigest6;
@@ -52,12 +53,15 @@ public final class KProvider extends Provider {
         super(NAME, "1.0.1",
                 "Implementation of the TLSH - Trend Locality Sensitive Hash MessageDigest using app.keve.ktlsh.");
 
-        final int[] buckets = {128, 256};
+        final int[] buckets = {TLSH.BUCKET_48, TLSH.BUCKET_128, TLSH.BUCKET_256};
         final int[] checksums = {1, 3};
         final int[] windowSizes = {TLSHDigest4.WINDOW_LENGTH, TLSHDigest5.WINDOW_LENGTH, TLSHDigest6.WINDOW_LENGTH,
                 TLSHDigest7.WINDOW_LENGTH, TLSHDigest8.WINDOW_LENGTH};
         for (int bucket : buckets) {
             for (int checksum : checksums) {
+                if (TLSH.BUCKET_48 == bucket && 3 == checksum) {
+                    continue; // no 3 byte checksum with 48 buckets
+                }
                 for (int windowSize : windowSizes) {
                     final String fullName = String.format("TLSH-%d-%d/%d", bucket, checksum, windowSize);
                     if (TLSHDigest5.WINDOW_LENGTH == windowSize) {
@@ -86,7 +90,7 @@ public final class KProvider extends Provider {
      */
     private static final class ProviderService extends Provider.Service {
         /** Regexp pattern for implemented algorithms. */
-        private static final Pattern ALG_PATTERN = Pattern.compile("TLSH-(128|256)-(1|3)/([4-8])");
+        private static final Pattern ALG_PATTERN = Pattern.compile("TLSH-(48|128|256)-(1|3)/([4-8])");
 
         ProviderService(final Provider p, final String type, final String algo, final String cn,
                 final String... aliases) {

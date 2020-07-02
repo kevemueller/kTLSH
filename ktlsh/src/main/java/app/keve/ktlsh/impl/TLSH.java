@@ -26,6 +26,13 @@ import java.util.Objects;
  *
  */
 public final class TLSH {
+    /** Constant for 48 buckets. */
+    public static final int BUCKET_48 = 48;
+    /** Constant for 128 buckets. */
+    public static final int BUCKET_128 = 128;
+    /** Constant for 256 buckets. */
+    public static final int BUCKET_256 = 256;
+
     /**
      * Lookup table for the logs of the length value. The last entry saturates the
      * logLength at 255.
@@ -150,7 +157,8 @@ public final class TLSH {
         this.lValue = lValue;
         this.q1 = q1;
         this.q2 = q2;
-        assert 32 == body.length || 64 == body.length;
+        assert BUCKET_48 * 2 / 8 == body.length || BUCKET_128 * 2 / 8 == body.length
+                || BUCKET_256 * 2 / 8 == body.length;
         this.body = body;
     }
 
@@ -383,20 +391,24 @@ public final class TLSH {
         final int bucketCount;
         final int checksumLength;
         switch (hash.length) {
-        case 32 + 2 + 1:
-            bucketCount = 128;
+        case BUCKET_48 * 2 / 8 + 2 + 1:
+            bucketCount = BUCKET_48;
             checksumLength = 1;
             break;
-        case 32 + 2 + 3:
-            bucketCount = 128;
+        case BUCKET_128 * 2 / 8 + 2 + 1:
+            bucketCount = BUCKET_128;
+            checksumLength = 1;
+            break;
+        case BUCKET_128 * 2 / 8 + 2 + 3:
+            bucketCount = BUCKET_128;
             checksumLength = 3;
             break;
-        case 64 + 2 + 1:
-            bucketCount = 256;
+        case BUCKET_256 * 2 / 8 + 2 + 1:
+            bucketCount = BUCKET_256;
             checksumLength = 1;
             break;
-        case 64 + 2 + 3:
-            bucketCount = 256;
+        case BUCKET_256 * 2 / 8 + 2 + 3:
+            bucketCount = BUCKET_256;
             checksumLength = 3;
             break;
         default:

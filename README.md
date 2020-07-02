@@ -31,11 +31,12 @@ final String encoded2 = TLSHUtil.encoded(hash2);
 final int score = TLSHUtil.score(hash1, hash2, false);
 ```
 
-All published TLSH algorithm variants are supported using the following name selector `TLSH-(128|256)-(1|3)/[4-8]`, where `128` or `256` is the number of buckets, `1` or `3`  is the number of checksum bytes and the optional `/4` to `/8` suffix is the window size. The window size defaults to 5 bytes and may be omitted.
+All published TLSH algorithm variants are supported using the following name selector `TLSH-(48|128|256)-(1|3)/[4-8]`, where `48`, `128` or `256` is the number of buckets, `1` or `3`  is the number of checksum bytes and the optional `/4` to `/8` suffix is the window size. The window size defaults to 5 bytes and may be omitted. Note that with 48 buckets only 1 checksum byte is specified. 
 That is the full list of algorithms is:
 
 | 4B window       | 5B window                                   | ... | 8B window      |
-| --------------  | ------------------------------------------- | --- | -------------- |
+| --------------- | ------------------------------------------- | --- | -------------- |
+| `TLSH-48-1/4`   | `TLSH-48-1/5` aka `TLSH-48-1`               | ... | `TLSH-48-1/8`  |
 | `TLSH-128-1/4`  | `TLSH-128-1/5` aka `TLSH-128-1` aka `TLSH`  | ... | `TLSH-128-1/8` | 
 | `TLSH-128-3/4`  | `TLSH-128-3/5` aka `TLSH-128-3`             | ... | `TLSH-128-3/8` |
 | `TLSH-256-1/4`  | `TLSH-256-1/5` aka `TLSH-256-1`             | ... | `TLSH-256-1/8` | 
