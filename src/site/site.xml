@@ -1,0 +1,29 @@
+<project xmlns="http://maven.apache.org/DECORATION/1.8.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/DECORATION/1.8.0 http://maven.apache.org/xsd/decoration-1.8.0.xsd">
+
+	<body>
+		<menu ref="parent" inherit="top" />
+		<menu ref="reports" inherit="top" />
+		<menu name="Generated docs" inherit="bottom" inheritAsRef="true">
+			<item name="API docs" href="apidocs/index.html" />
+		</menu>
+		<menu ref="modules" inherit="top" />
+	</body>
+
+	<skin>
+		<groupId>org.apache.maven.skins</groupId>
+		<artifactId>maven-fluido-skin</artifactId>
+		<version>1.9</version>
+	</skin>
+
+	<custom>
+		<fluidoSkin>
+			<skipGenerationDate>true</skipGenerationDate>
+			<breadcrumbDivider>»</breadcrumbDivider>
+			<gitHub>
+				<projectId>kevemueller/kTLSH</projectId>
+			</gitHub>
+		</fluidoSkin>
+	</custom>
+</project>

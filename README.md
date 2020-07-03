@@ -9,12 +9,12 @@ A fresh look at implementing TLSH in Java.
 This source implements the [TLSH - Trend Locality Sensitive Hash](https://github.com/trendmicro/tlsh) method in Java language.
 
 While there are already Java implementations of the method, the current one was written with specific design goals in mind.
-- Specfication compliant and unit tested
+- Specification compliant and unit tested
 - Java look-and-feel compliant
 - Performant
 
 ## Usage
-The module is built with maven. Details on the maven build are at the [kTLSH maven site](https://ktlsh.keve.app/maven-site/). There are also [API docs](https://ktlsh.keve.app/apidocs/) 
+The module is built with maven. Details on the maven build are at the [kTLSH site](https://ktlsh.keve.app/). There are also [API docs](https://ktlsh.keve.app/apidocs/). 
 
 Usage follows the pattern used by the other hash methods available in Java.
 
@@ -34,13 +34,13 @@ final int score = TLSHUtil.score(hash1, hash2, false);
 All published TLSH algorithm variants are supported using the following name selector `TLSH-(48|128|256)-(1|3)/[4-8]`, where `48`, `128` or `256` is the number of buckets, `1` or `3`  is the number of checksum bytes and the optional `/4` to `/8` suffix is the window size. The window size defaults to 5 bytes and may be omitted. Note that with 48 buckets only 1 checksum byte is specified. 
 That is the full list of algorithms is:
 
-| 4B window       | 5B window                                   | ... | 8B window      |
-| --------------- | ------------------------------------------- | --- | -------------- |
-| `TLSH-48-1/4`   | `TLSH-48-1/5` aka `TLSH-48-1`               | ... | `TLSH-48-1/8`  |
-| `TLSH-128-1/4`  | `TLSH-128-1/5` aka `TLSH-128-1` aka `TLSH`  | ... | `TLSH-128-1/8` | 
-| `TLSH-128-3/4`  | `TLSH-128-3/5` aka `TLSH-128-3`             | ... | `TLSH-128-3/8` |
-| `TLSH-256-1/4`  | `TLSH-256-1/5` aka `TLSH-256-1`             | ... | `TLSH-256-1/8` | 
-| `TLSH-256-3/4`  | `TLSH-256-3/5` aka `TLSH-256-3`             | ... | `TLSH-256-3/8` |
+| 4B window       | 5B window                                   | 6B window      | 7B window      | 8B window      |
+| --------------- | ------------------------------------------- | -------------- | -------------- | -------------- |
+| `TLSH-48-1/4`   | `TLSH-48-1/5` aka `TLSH-48-1`               | `TLSH-48-1/6`  | `TLSH-48-1/7`  | `TLSH-48-1/8`  |
+| `TLSH-128-1/4`  | `TLSH-128-1/5` aka `TLSH-128-1` aka `TLSH`  | `TLSH-128-1/6` | `TLSH-128-1/7` | `TLSH-128-1/8` | 
+| `TLSH-128-3/4`  | `TLSH-128-3/5` aka `TLSH-128-3`             | `TLSH-128-3/6` | `TLSH-128-3/7` | `TLSH-128-3/8` |
+| `TLSH-256-1/4`  | `TLSH-256-1/5` aka `TLSH-256-1`             | `TLSH-256-1/6` | `TLSH-256-1/7` | `TLSH-256-1/8` | 
+| `TLSH-256-3/4`  | `TLSH-256-3/5` aka `TLSH-256-3`             | `TLSH-256-3/6` | `TLSH-256-3/7` | `TLSH-256-3/8` |
 
 The module only exports the `TLSHUtil` utility class. It contains the  `score` utility function that computes the score difference between the provided two hashes as well as formatters for the hexadecimal representation of the TLSH hash number.
 
@@ -71,11 +71,11 @@ HashBenchmark.testTMSmall32KiB   thrpt    2   94514.575          ops/s
 HashBenchmark.testMD5Large16MiB  thrpt    2  507247.038          ops/s
 HashBenchmark.testMD5Small32KiB  thrpt    2  497034.176          ops/s
 ```
-The results show that the implementation is approx. 24% faster on large datasets and approx. 22% faster on small datasets compared to the reference Java port. Preliminary comparison on large datasets of the C++ implementation show that the C++ implemetation is comparable in speed to the reference Java implementation, i.e. slower than this Java implementation.
+The results show that the implementation is approximately 24% faster on large datasets and approximately. 22% faster on small datasets compared to the reference Java port. Preliminary comparison on large datasets of the C++ implementation show that the C++ implementation is comparable in speed to the reference Java implementation, i.e. slower than this Java implementation.
 
 As a comparison the performance of the MD5 hash on the same datasets is also obtained.
 
-All numbers are scaled to KiB/s hashing bandwith, i.e. the implementation hashes 112MiB/s on the developers MacBook Pro.
+All numbers are scaled to KiB/s hashing bandwidth, i.e. the implementation hashes 112MiB/s on the developers MacBook Pro.
 
 Further increase in performance is currently being investigated.
 
@@ -88,7 +88,7 @@ Another implementation can be found under [https://github.com/idealista/tlsh](ht
 ### Match with the C++ reference implementation
 This implementation follows the original C++ reference implementation and not the Java reference implementation.
 
-### Arbitrary imput size
+### Arbitrary input size
 This implementation will compute hashes for all input sizes between 0 and Long.MAX_VALUE, i.e. 8EiB. The C++ reference implementation will only produce a hash if a minimum of 50 bytes and a minimum level of entropy was fed into the digester. Also the C++ implementation has an upper bound of 2GiB.
 
 ## Feedback

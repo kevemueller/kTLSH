@@ -1,0 +1,25 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>app.keve.ktlsh</groupId>
+		<artifactId>ktlsh-parent</artifactId>
+		<version>1.0.2-SNAPSHOT</version>
+	</parent>
+	<artifactId>ktlsh-tool</artifactId>
+	<name>kTLSH-tool</name>
+	<description>Tool to hash filesystem artefacts with TLSH</description>
+
+	<properties>
+		<projectRoot>${project.parent.basedir}</projectRoot>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>app.keve.ktlsh</groupId>
+			<artifactId>ktlsh</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+</project>
