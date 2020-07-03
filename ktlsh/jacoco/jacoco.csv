@@ -1,0 +1,16 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+kTLSH,app.keve.ktlsh,TLSHUtil,0,130,0,8,0,22,0,12,0,8
+kTLSH,app.keve.ktlsh.impl,TLSHDigest4,5,195,1,6,1,26,1,6,0,3
+kTLSH,app.keve.ktlsh.impl,TLSHDigest5,5,275,1,9,1,36,1,7,0,3
+kTLSH,app.keve.ktlsh.impl,TLSHDigest6,5,341,1,6,1,37,1,6,0,3
+kTLSH,app.keve.ktlsh.impl,TLSHDigest7,5,430,1,6,1,44,1,6,0,3
+kTLSH,app.keve.ktlsh.impl,TLSH,21,1740,12,63,3,125,12,46,0,18
+kTLSH,app.keve.ktlsh.impl,TLSHDigest8,5,532,1,6,1,52,1,6,0,3
+kTLSH,app.keve.ktlsh.impl,TLSHDigest5c1,0,239,0,8,0,32,0,7,0,3
+kTLSH,app.keve.ktlsh.impl,TLSH.DiffTable,0,131,0,12,0,23,0,8,0,2
+kTLSH,app.keve.ktlsh.impl,AbstractTLSHDigest,0,263,0,14,0,46,0,13,0,6
+kTLSH,app.keve.ktlsh.impl,TLSHDigest,0,71,0,8,0,16,0,11,0,5
+kTLSH,app.keve.ktlsh.impl,Pearson,0,1255,1,23,0,41,1,24,0,13
+kTLSH,app.keve.ktlsh.spi,KProvider,0,201,0,16,0,18,0,9,0,1
+kTLSH,app.keve.ktlsh.spi,KProvider.ProviderService,30,59,4,4,2,11,4,3,0,3
+kTLSH,app.keve.ktlsh.spi,TLSHMessageDigestSpiK,0,58,0,0,0,17,0,7,0,7

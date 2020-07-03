@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TLSHUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">kTLSH</a> &gt; <a href="index.source.html" class="el_package">app.keve.ktlsh</a> &gt; <span class="el_source">TLSHUtil.java</span></div><h1>TLSHUtil.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2020 Keve Müller
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package app.keve.ktlsh;
+
+import java.nio.charset.StandardCharsets;
+import java.security.Provider;
+import java.security.Security;
+import java.util.ServiceLoader;
+
+import app.keve.ktlsh.impl.TLSH;
+import app.keve.ktlsh.spi.KProvider;
+
+/**
+ * Utility class to perform basic operations on TLSH hashes.
+ * 
+ * @author keve
+ *
+ */
+public final class TLSHUtil {
+    /**
+     * Lookup table for upper case hex characters.
+     */
+<span class="fc" id="L36">    private static final byte[] HEX_UC = &quot;0123456789ABCDEF&quot;.getBytes(StandardCharsets.US_ASCII);</span>
+
+    private TLSHUtil() {
+    }
+
+    /**
+     * Obtain the name of the K provider.
+     * 
+     * @return the name of the K provider.
+     */
+    public static String providerNameK() {
+<span class="fc" id="L47">        return KProvider.NAME;</span>
+    }
+
+    /**
+     * Dynamically register the K provider.
+     */
+    public static void registerProvider() {
+<span class="fc" id="L54">        final ServiceLoader&lt;Provider&gt; serviceLoader = ServiceLoader.load(Provider.class);</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        for (final Provider p : serviceLoader) {</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">            if (KProvider.NAME.equals(p.getName())) {</span>
+<span class="fc" id="L57">                Security.addProvider(p);</span>
+            }
+<span class="fc" id="L59">        }</span>
+<span class="fc" id="L60">    }</span>
+
+    /**
+     * Convert a sequence of hex characters to a buffer of bytes.
+     * 
+     * @param hex the hex string
+     * @return the byte buffer
+     */
+    public static byte[] hexToBytes(final CharSequence hex) {
+<span class="fc" id="L69">        final int len = hex.length();</span>
+<span class="fc" id="L70">        final byte[] data = new byte[len / 2];</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        for (int i = 0; i &lt; len; i += 2) {</span>
+<span class="fc" id="L72">            data[i / 2] = (byte) ((Character.digit(hex.charAt(i), 16) &lt;&lt; 4) + Character.digit(hex.charAt(i + 1), 16));</span>
+        }
+<span class="fc" id="L74">        return data;</span>
+    }
+
+    /**
+     * Convert a byte buffer to upper case hex character string.
+     * 
+     * @param bytes the buffer
+     * @return the hex string
+     */
+    public static String bytesToHEX(final byte[] bytes) {
+<span class="fc" id="L84">        final byte[] hexChars = new byte[bytes.length * 2];</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        for (int j = 0; j &lt; bytes.length; j++) {</span>
+<span class="fc" id="L86">            final int value = bytes[j] &amp; 0xFF;</span>
+<span class="fc" id="L87">            hexChars[j * 2] = HEX_UC[value &gt;&gt;&gt; 4];</span>
+<span class="fc" id="L88">            hexChars[j * 2 + 1] = HEX_UC[value &amp; 0x0F];</span>
+        }
+<span class="fc" id="L90">        return new String(hexChars, StandardCharsets.UTF_8);</span>
+    }
+
+    /**
+     * Encode the buffer representation of the TLSH hash.
+     * 
+     * @param hash the TLSH hash in buffer representation.
+     * @return the TLSH hash in hexadecimal string representation.
+     */
+    public static String encoded(final byte[] hash) {
+<span class="fc" id="L100">        return bytesToHEX(hash);</span>
+    }
+
+    /**
+     * Encode the buffer representation of the TLSH hash with version prefix.
+     * 
+     * @param hash the TLSH hash in buffer representation.
+     * @return the TLSH hash in hexadecimal string representation with version
+     *         prefix.
+     */
+    public static String encodedT1(final byte[] hash) {
+<span class="fc" id="L111">        return &quot;T1&quot; + bytesToHEX(hash);</span>
+    }
+
+    /**
+     * Score two TLSH hashes in buffer representation.
+     * 
+     * @param hash1   the TLSH hash in buffer representation.
+     * @param hash2   the TLSH hash in buffer representation.
+     * @param lenDiff true, if the length difference should be scored.
+     * @return the score value.
+     */
+    public static int score(final byte[] hash1, final byte[] hash2, final boolean lenDiff) {
+<span class="fc" id="L123">        return TLSH.of(hash1).score(TLSH.of(hash2), lenDiff);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

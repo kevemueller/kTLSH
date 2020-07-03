@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TLSHDigest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">kTLSH</a> &gt; <a href="index.source.html" class="el_package">app.keve.ktlsh.impl</a> &gt; <span class="el_source">TLSHDigest.java</span></div><h1>TLSHDigest.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2020 Keve Müller
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package app.keve.ktlsh.impl;
+
+import java.nio.ByteBuffer;
+
+/**
+ * The base interface for TLSH digesters.
+ * 
+ * @author keve
+ *
+ */
+public interface TLSHDigest {
+
+    /**
+     * Update the digester with given byte.
+     * 
+     * @param b the byte
+     */
+    default void update(final byte b) {
+<span class="fc" id="L34">        update(ByteBuffer.wrap(new byte[] {b}));</span>
+<span class="fc" id="L35">    }</span>
+
+    /**
+     * Update the digester with given bytes.
+     * 
+     * @param buf the bytes
+     */
+    default void update(final byte[] buf) {
+<span class="fc" id="L43">        update(ByteBuffer.wrap(buf));</span>
+<span class="fc" id="L44">    }</span>
+
+    /**
+     * Update the digester with given bytes.
+     * 
+     * @param buf    the byte buffer
+     * @param offset offset to read from
+     * @param length number of bytes to read
+     */
+    default void update(final byte[] buf, final int offset, final int length) {
+<span class="fc" id="L54">        update(ByteBuffer.wrap(buf, offset, length));</span>
+<span class="fc" id="L55">    }</span>
+
+    /**
+     * Update the digester with given bytes.
+     * 
+     * @param buf the bytes
+     */
+    void update(ByteBuffer buf);
+
+    /**
+     * Reset the digester instance.
+     */
+    void reset();
+
+    /**
+     * Finish the TLSH computation and return the hash.
+     * 
+     * @return the hash
+     */
+    TLSH digest();
+
+    /**
+     * Return the default TLSHDigest instance with 5 bytes window, 128 buckets and 1
+     * checksum byte.
+     * 
+     * @return the instance.
+     */
+    static TLSHDigest of() {
+<span class="fc" id="L83">        return of(TLSHDigest5.WINDOW_LENGTH, 128, 1);</span>
+    }
+
+    /**
+     * Return an TLSHDigest instance for given configuration.
+     * 
+     * @param windowLength   the window length ([4-8])
+     * @param bucketCount    the bucket count (128|256)
+     * @param checkSumLength the number of checksum bytes (1|3)
+     * @return the instance
+     */
+    static TLSHDigest of(final int windowLength, final int bucketCount, final int checkSumLength) {
+<span class="fc bfc" id="L95" title="All 6 branches covered.">        switch (windowLength) {</span>
+        case TLSHDigest4.WINDOW_LENGTH:
+<span class="fc" id="L97">            return new TLSHDigest4(bucketCount, checkSumLength);</span>
+        case TLSHDigest5.WINDOW_LENGTH:
+<span class="fc bfc" id="L99" title="All 2 branches covered.">            if (1 == checkSumLength) {</span>
+<span class="fc" id="L100">                return new TLSHDigest5c1(bucketCount);</span>
+            } else {
+<span class="fc" id="L102">                return new TLSHDigest5(bucketCount, checkSumLength);</span>
+            }
+        case TLSHDigest6.WINDOW_LENGTH:
+<span class="fc" id="L105">            return new TLSHDigest6(bucketCount, checkSumLength);</span>
+        case TLSHDigest7.WINDOW_LENGTH:
+<span class="fc" id="L107">            return new TLSHDigest7(bucketCount, checkSumLength);</span>
+        case TLSHDigest8.WINDOW_LENGTH:
+<span class="fc" id="L109">            return new TLSHDigest8(bucketCount, checkSumLength);</span>
+        default:
+<span class="fc" id="L111">            throw new IllegalArgumentException();</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

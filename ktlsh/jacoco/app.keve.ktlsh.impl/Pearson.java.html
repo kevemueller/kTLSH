@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Pearson.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">kTLSH</a> &gt; <a href="index.source.html" class="el_package">app.keve.ktlsh.impl</a> &gt; <span class="el_source">Pearson.java</span></div><h1>Pearson.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2020 Keve Müller
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package app.keve.ktlsh.impl;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+/**
+ * Implementation of Pearson's hash function. Follows original publication:
+ * https://web.archive.org/web/20120704025921/http://cs.mwsu.edu/~griffin/courses/2133/downloads/Spring11/p677-pearson.pdf
+ *
+ */
+public final class Pearson {
+    /** Pearson's sample random table from aforementioned publication. */
+<span class="fc" id="L32">    public static final int[] T = {1, 87, 49, 12, 176, 178, 102, 166, 121, 193, 6, 84, 249, 230, 44, 163, 14, 197, 213,</span>
+            181, 161, 85, 218, 80, 64, 239, 24, 226, 236, 142, 38, 200, 110, 177, 104, 103, 141, 253, 255, 50, 77, 101,
+            81, 18, 45, 96, 31, 222, 25, 107, 190, 70, 86, 237, 240, 34, 72, 242, 20, 214, 244, 227, 149, 235, 97, 234,
+            57, 22, 60, 250, 82, 175, 208, 5, 127, 199, 111, 62, 135, 248, 174, 169, 211, 58, 66, 154, 106, 195, 245,
+            171, 17, 187, 182, 179, 0, 243, 132, 56, 148, 75, 128, 133, 158, 100, 130, 126, 91, 13, 153, 246, 216, 219,
+            119, 68, 223, 78, 83, 88, 201, 99, 122, 11, 92, 32, 136, 114, 52, 10, 138, 30, 48, 183, 156, 35, 61, 26,
+            143, 74, 251, 94, 129, 162, 63, 152, 170, 7, 115, 167, 241, 206, 3, 150, 55, 59, 151, 220, 90, 53, 23, 131,
+            125, 173, 15, 238, 79, 95, 89, 16, 105, 137, 225, 224, 217, 160, 37, 123, 118, 73, 2, 157, 46, 116, 9, 145,
+            134, 228, 207, 212, 202, 215, 69, 229, 27, 188, 67, 124, 168, 252, 42, 4, 29, 108, 21, 247, 19, 205, 39,
+            203, 233, 40, 186, 147, 198, 192, 155, 33, 164, 191, 98, 204, 165, 180, 117, 76, 140, 36, 210, 172, 41, 54,
+            159, 8, 185, 232, 113, 196, 231, 47, 146, 120, 51, 65, 28, 144, 254, 221, 93, 189, 194, 139, 112, 43, 71,
+            109, 184, 209};
+
+    /** The permutation to use for hashing. */
+    public final int[] t;
+    /** The pre-computed hashCode of the permutation array. */
+    private final int hashCode;
+
+<span class="fc" id="L50">    private Pearson(final int[] t) {</span>
+<span class="fc" id="L51">        this.t = t;</span>
+<span class="fc" id="L52">        hashCode = Arrays.hashCode(t);</span>
+<span class="fc" id="L53">    }</span>
+
+    /**
+     * Hash a byte buffer.
+     * 
+     * @param buf the buffer to hash
+     * @return the unsigned byte hash value
+     */
+    public int hash(final byte[] buf) {
+<span class="fc" id="L62">        int hash = 0;</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        for (final int b : buf) {</span>
+<span class="fc" id="L64">            hash = t[hash ^ b &amp; 0xFF];</span>
+        }
+<span class="fc" id="L66">        return hash;</span>
+    }
+
+    /**
+     * Hash a single byte.
+     * 
+     * @param i the byte to hash
+     * @return the unsigned byte hash value
+     */
+    public int hash(final int i) {
+<span class="fc" id="L76">        return t[i];</span>
+    }
+
+    /**
+     * Hash a two bytes.
+     * 
+     * @param i the first byte to hash
+     * @param j the second byte.
+     * @return the unsigned byte hash value
+     */
+    public int hash(final int i, final int j) {
+<span class="fc" id="L87">        return t[t[i] ^ j];</span>
+    }
+
+    /**
+     * Hash a three bytes.
+     * 
+     * @param i the first byte to hash
+     * @param j the second byte.
+     * @param k the third byte.
+     * @return the unsigned byte hash value
+     */
+    public int hash(final int i, final int j, final int k) {
+<span class="fc" id="L99">        return t[t[t[i] ^ j] ^ k];</span>
+    }
+
+    /**
+     * Hash a sequence of bytes.
+     * 
+     * @param buf the bytes to hash
+     * @return the unsigned byte hash value
+     */
+    public int hash(final int... buf) {
+<span class="fc" id="L109">        int hash = 0;</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">        for (final int b : buf) {</span>
+<span class="fc" id="L111">            hash = t[hash ^ b];</span>
+        }
+<span class="fc" id="L113">        return hash;</span>
+    }
+
+    /**
+     * Obtain a Pearson hash instance for the default permutation.
+     * 
+     * @return the instance.
+     */
+    public static Pearson defaultInstance() {
+<span class="fc" id="L122">        return Pearson.of(T);</span>
+    }
+
+    /**
+     * Obtain a Pearson hash instance for a random permutation.
+     * 
+     * @return the instance.
+     */
+    public static Pearson randomInstance() {
+<span class="fc" id="L131">        final int[] t = new int[256];</span>
+<span class="fc" id="L132">        final List&lt;Integer&gt; l = IntStream.range(0, 256).boxed().collect(Collectors.toList());</span>
+<span class="fc" id="L133">        Collections.shuffle(l);</span>
+<span class="fc" id="L134">        int i = 0;</span>
+<span class="fc" id="L135">        final Iterator&lt;Integer&gt; it = l.iterator();</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">        while (it.hasNext()) {</span>
+<span class="fc" id="L137">            t[i++] = it.next();</span>
+        }
+
+<span class="fc" id="L140">        return Pearson.of(t);</span>
+    }
+
+    /**
+     * Obtain a Pearson hash instance the given permutation.
+     * 
+     * @param t the permutation
+     * @return the instance.
+     */
+    public static Pearson of(final int[] t) {
+<span class="fc bfc" id="L150" title="All 4 branches covered.">        if (256 != t.length || 256 != IntStream.of(t).distinct().count()) {</span>
+<span class="fc" id="L151">            throw new IllegalArgumentException(&quot;Bad permutation!&quot;);</span>
+        }
+<span class="fc bfc" id="L153" title="All 2 branches covered.">        for (final int b : t) {</span>
+<span class="fc bfc" id="L154" title="All 4 branches covered.">            if (b &lt; 0 || b &gt;= 256) {</span>
+<span class="fc" id="L155">                throw new IllegalArgumentException(&quot;Bad value &quot; + b + &quot;.&quot;);</span>
+            }
+        }
+<span class="fc" id="L158">        return new Pearson(t.clone());</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="fc" id="L163">        return hashCode;</span>
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+<span class="fc bfc" id="L168" title="All 2 branches covered.">        if (this == obj) {</span>
+<span class="fc" id="L169">            return true;</span>
+        }
+<span class="fc bfc" id="L171" title="All 2 branches covered.">        if (!(obj instanceof Pearson)) {</span>
+<span class="fc" id="L172">            return false;</span>
+        }
+<span class="fc" id="L174">        final Pearson other = (Pearson) obj;</span>
+<span class="pc bpc" id="L175" title="1 of 4 branches missed.">        return hashCode == other.hashCode &amp;&amp; Arrays.equals(t, other.t);</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="fc" id="L180">        final StringBuffer stringBuffer = new StringBuffer(&quot;Pearson&quot;);</span>
+<span class="fc" id="L181">        stringBuffer.append(Arrays.toString(t));</span>
+<span class="fc" id="L182">        return stringBuffer.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

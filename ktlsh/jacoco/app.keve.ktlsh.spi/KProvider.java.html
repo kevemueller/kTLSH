@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>KProvider.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">kTLSH</a> &gt; <a href="index.source.html" class="el_package">app.keve.ktlsh.spi</a> &gt; <span class="el_source">KProvider.java</span></div><h1>KProvider.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2020 Keve Müller
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package app.keve.ktlsh.spi;
+
+import java.security.MessageDigestSpi;
+import java.security.NoSuchAlgorithmException;
+import java.security.Provider;
+import java.security.ProviderException;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import app.keve.ktlsh.impl.TLSH;
+import app.keve.ktlsh.impl.TLSHDigest4;
+import app.keve.ktlsh.impl.TLSHDigest5;
+import app.keve.ktlsh.impl.TLSHDigest6;
+import app.keve.ktlsh.impl.TLSHDigest7;
+import app.keve.ktlsh.impl.TLSHDigest8;
+
+/**
+ * The provider for the K set of algorithms to compute TLSH.
+ * 
+ * @author keve
+ *
+ */
+public final class KProvider extends Provider {
+    /** The canonical name of the provider. */
+    public static final String NAME = &quot;KProvider&quot;;
+    /** The MessageDigest type string. */
+    private static final String MESSAGE_DIGEST = &quot;MessageDigest&quot;;
+    /** The SPI class. */
+    private static final String MESSAGE_DIGEST_SPI = &quot;app.keve.ktlsh.spi.TLSHMessageDigestSpiK&quot;;
+    /** Version UID. */
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Initialise the K provider with the known algorithms.
+     */
+    public KProvider() {
+<span class="fc" id="L53">        super(NAME, &quot;1.0.1&quot;,</span>
+                &quot;Implementation of the TLSH - Trend Locality Sensitive Hash MessageDigest using app.keve.ktlsh.&quot;);
+
+<span class="fc" id="L56">        final int[] buckets = {TLSH.BUCKET_48, TLSH.BUCKET_128, TLSH.BUCKET_256};</span>
+<span class="fc" id="L57">        final int[] checksums = {1, 3};</span>
+<span class="fc" id="L58">        final int[] windowSizes = {TLSHDigest4.WINDOW_LENGTH, TLSHDigest5.WINDOW_LENGTH, TLSHDigest6.WINDOW_LENGTH,</span>
+                TLSHDigest7.WINDOW_LENGTH, TLSHDigest8.WINDOW_LENGTH};
+<span class="fc bfc" id="L60" title="All 2 branches covered.">        for (int bucket : buckets) {</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">            for (int checksum : checksums) {</span>
+<span class="fc bfc" id="L62" title="All 4 branches covered.">                if (TLSH.BUCKET_48 == bucket &amp;&amp; 3 == checksum) {</span>
+<span class="fc" id="L63">                    continue; // no 3 byte checksum with 48 buckets</span>
+                }
+<span class="fc bfc" id="L65" title="All 2 branches covered.">                for (int windowSize : windowSizes) {</span>
+<span class="fc" id="L66">                    final String fullName = String.format(&quot;TLSH-%d-%d/%d&quot;, bucket, checksum, windowSize);</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">                    if (TLSHDigest5.WINDOW_LENGTH == windowSize) {</span>
+<span class="fc" id="L68">                        final String shortName = String.format(&quot;TLSH-%d-%d&quot;, bucket, checksum);</span>
+<span class="fc bfc" id="L69" title="All 4 branches covered.">                        if (1 == checksum &amp;&amp; 128 == bucket) {</span>
+<span class="fc" id="L70">                            putService(new ProviderService(this, MESSAGE_DIGEST, fullName, MESSAGE_DIGEST_SPI, &quot;TLSH&quot;,</span>
+                                    shortName));
+
+                        } else {
+<span class="fc" id="L74">                            putService(</span>
+                                    new ProviderService(this, MESSAGE_DIGEST, fullName, MESSAGE_DIGEST_SPI, shortName));
+                        }
+<span class="fc" id="L77">                    } else {</span>
+<span class="fc" id="L78">                        putService(new ProviderService(this, MESSAGE_DIGEST, fullName, MESSAGE_DIGEST_SPI));</span>
+                    }
+                }
+            }
+        }
+<span class="fc" id="L83">    }</span>
+
+    /**
+     * Provider.Service for TLSH MesageDigest.
+     * 
+     * @author keve
+     *
+     */
+<span class="pc bpc" id="L91" title="1 of 2 branches missed.">    private static final class ProviderService extends Provider.Service {</span>
+        /** Regexp pattern for implemented algorithms. */
+<span class="fc" id="L93">        private static final Pattern ALG_PATTERN = Pattern.compile(&quot;TLSH-(48|128|256)-(1|3)/([4-8])&quot;);</span>
+
+        ProviderService(final Provider p, final String type, final String algo, final String cn,
+                final String... aliases) {
+<span class="fc" id="L97">            super(p, type, algo, cn, List.of(aliases), null);</span>
+<span class="fc" id="L98">        }</span>
+
+        @Override
+        public MessageDigestSpi newInstance(final Object ctrParamObj) throws NoSuchAlgorithmException {
+            // We are only creating MessageDigest instances of this factory.
+<span class="pc bpc" id="L103" title="2 of 4 branches missed.">            assert MESSAGE_DIGEST.equals(getType());</span>
+//            try {
+<span class="fc" id="L105">            final Matcher matcher = ALG_PATTERN.matcher(getAlgorithm());</span>
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">            if (matcher.matches()) {</span>
+<span class="fc" id="L107">                final int bucketCount = Integer.valueOf(matcher.group(1));</span>
+<span class="fc" id="L108">                final int checksumCount = Integer.valueOf(matcher.group(2));</span>
+<span class="fc" id="L109">                final int windowSize = Integer.valueOf(matcher.group(3));</span>
+<span class="fc" id="L110">                return new TLSHMessageDigestSpiK(windowSize, bucketCount, checksumCount);</span>
+            }
+//            } catch (final Exception ex) {
+//                throw new NoSuchAlgorithmException(&quot;Error constructing &quot; + type + &quot; for &quot; + algo + &quot; using &quot; + NAME,
+//                        ex);
+//            }
+            // this line is very hard to reach, it would mean we have a mistake in
+            // constructing fullName in KProvider constructor
+            // or Java code calls us with bogus parameters.
+<span class="nc" id="L119">            throw new ProviderException(</span>
+<span class="nc" id="L120">                    String.format(&quot;No impl for %s %s in %s&quot;, getType(), getAlgorithm(), getClass().getName()));</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
