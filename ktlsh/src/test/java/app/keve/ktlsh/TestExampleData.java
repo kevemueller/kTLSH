@@ -27,6 +27,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -145,27 +146,31 @@ public final class TestExampleData extends AbstractTest {
     /**
      * Test the scores in the expLenXRefScore files.
      * 
-     * @param resourceGroup the resource group
-     * @param bits          the number of buckets
-     * @param check         the checksum bytes.
-     * @param resource1Name the name of the first resource
-     * @param resource2Name the name of the second resource
-     * @param expectedScore the expected score of the stream content hashes.
-     * @throws IOException              if an I/O error occurs
-     * @throws NoSuchAlgorithmException if the TLSH algorithm is not registered
-     * @throws NoSuchProviderException  if the provider is not registered
      */
-    @ParameterizedTest(name = "{1}-{2} {3}<>{5}")
-    @MethodSource("expLenXrefScore")
-    public void testExpLenXrefScore(final String resourceGroup, final String bits, final String check,
-            final String resource1Name, final String resource2Name, final int expectedScore)
-            throws IOException, NoSuchAlgorithmException, NoSuchProviderException {
-        final MessageDigest mdx = MessageDigest.getInstance(formatAlg(bits, check), provider);
-        try (InputStream resource1 = resourceStream(resource1Name);
-                InputStream resource2 = resourceStream(resource2Name)) {
-            final int score = getScore(mdx, resource1, resource2, true);
-            assertEquals(expectedScore, score);
-        }
+    @Test
+    public void testExpLenXrefScore() {
+        // converted from ParameterizedTest as it clutters the logs (12169 tests).
+        expLenXrefScore().parallel().forEach(a -> {
+            final Object[] arguments = a.get();
+//            final String resourceGroup = (String) arguments[0];
+            final String bits = (String) arguments[1];
+            final String check = (String) arguments[2];
+            final String resource1Name = (String) arguments[3];
+            final String resource2Name = (String) arguments[4];
+            final int expectedScore = (int) arguments[4 + 1];
+
+            try {
+                final MessageDigest mdx = MessageDigest.getInstance(formatAlg(bits, check), provider);
+                try (InputStream resource1 = resourceStream(resource1Name);
+                        InputStream resource2 = resourceStream(resource2Name)) {
+                    final int score = getScore(mdx, resource1, resource2, true);
+                    assertEquals(expectedScore, score,
+                            String.format("Mismatch at %s-%s %s<>%s", bits, check, resource1Name, resource2Name));
+                }
+            } catch (NoSuchAlgorithmException | NoSuchProviderException | IOException e) {
+                throw new IllegalArgumentException(e);
+            }
+        });
     }
 
     /**
@@ -197,27 +202,31 @@ public final class TestExampleData extends AbstractTest {
     /**
      * Test the scores in the expXLenXrefScore files.
      * 
-     * @param resourceGroup the resource group
-     * @param bits          the number of buckets
-     * @param check         the checksum bytes.
-     * @param resource1Name the name of the first resource
-     * @param resource2Name the name of the second resource
-     * @param expectedScore the expected score of the stream content hashes.
-     * @throws IOException              if an I/O error occurs
-     * @throws NoSuchAlgorithmException if the TLSH algorithm is not registered
-     * @throws NoSuchProviderException  if the provider is not registered
      */
-    @ParameterizedTest(name = "{1}-{2} {3}")
-    @MethodSource("expXLenXrefScore")
-    public void testExpXLenXrefScore(final String resourceGroup, final String bits, final String check,
-            final String resource1Name, final String resource2Name, final int expectedScore)
-            throws IOException, NoSuchAlgorithmException, NoSuchProviderException {
-        final MessageDigest mdx = MessageDigest.getInstance(formatAlg(bits, check), provider);
-        try (InputStream resource1 = resourceStream(resource1Name);
-                InputStream resource2 = resourceStream(resource2Name)) {
-            final int score = getScore(mdx, resource1, resource2, false);
-            assertEquals(expectedScore, score);
-        }
+    @Test
+    public void testExpXLenXrefScore() {
+        // converted from ParameterizedTest as it clutters the logs (12169 tests).
+
+        expXLenXrefScore().parallel().forEach(a -> {
+            final Object[] arguments = a.get();
+//          final String resourceGroup = (String) arguments[0];
+            final String bits = (String) arguments[1];
+            final String check = (String) arguments[2];
+            final String resource1Name = (String) arguments[3];
+            final String resource2Name = (String) arguments[4];
+            final int expectedScore = (int) arguments[4 + 1];
+            try {
+                final MessageDigest mdx = MessageDigest.getInstance(formatAlg(bits, check), provider);
+                try (InputStream resource1 = resourceStream(resource1Name);
+                        InputStream resource2 = resourceStream(resource2Name)) {
+                    final int score = getScore(mdx, resource1, resource2, false);
+                    assertEquals(expectedScore, score,
+                            String.format("%s-%s %s<>%s", bits, check, resource1Name, resource2Name));
+                }
+            } catch (NoSuchAlgorithmException | NoSuchProviderException | IOException e) {
+                throw new IllegalArgumentException(e);
+            }
+        });
     }
 
     /**

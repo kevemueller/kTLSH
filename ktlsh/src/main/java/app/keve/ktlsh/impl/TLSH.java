@@ -26,6 +26,11 @@ import java.util.Objects;
  *
  */
 public final class TLSH {
+    /** Constant for 1 checksum byte. */
+    public static final int CHECKSUM_1 = 1;
+    /** Constant for 3 checksum bytes. */
+    public static final int CHECKSUM_3 = 3;
+
     /** Constant for 48 buckets. */
     public static final int BUCKET_48 = 48;
     /** Constant for 128 buckets. */
@@ -152,7 +157,7 @@ public final class TLSH {
     public final int[] body;
 
     private TLSH(final int[] checksum, final int lValue, final int q1, final int q2, final int[] body) {
-        assert 1 == checksum.length || 3 == checksum.length;
+        assert CHECKSUM_1 == checksum.length || CHECKSUM_3 == checksum.length;
         this.checksum = checksum;
         this.lValue = lValue;
         this.q1 = q1;
@@ -169,7 +174,6 @@ public final class TLSH {
         result = prime * result + Arrays.hashCode(body);
         result = prime * result + Arrays.hashCode(checksum);
         result = prime * result + Objects.hash(lValue, q1, q2);
-
         return result;
     }
 
@@ -191,13 +195,12 @@ public final class TLSH {
         final int maxLen = 10;
         final StringBuilder builder = new StringBuilder(64);
         builder.append("TLSH [checksum=");
-        builder.append(
-                null == checksum ? null : Arrays.toString(Arrays.copyOf(checksum, Math.min(checksum.length, maxLen))));
+        builder.append(Arrays.toString(checksum));
         builder.append(", lValue=").append(lValue);
         builder.append(", q1=").append(q1);
         builder.append(", q2=").append(q2);
         builder.append(", body[").append(body.length).append("]=");
-        builder.append(null == body ? null : Arrays.toString(Arrays.copyOf(body, Math.min(body.length, maxLen))));
+        builder.append(Arrays.toString(Arrays.copyOf(body, Math.min(body.length, maxLen))));
         builder.append(']');
         return builder.toString();
     }
@@ -391,25 +394,25 @@ public final class TLSH {
         final int bucketCount;
         final int checksumLength;
         switch (hash.length) {
-        case BUCKET_48 * 2 / 8 + 2 + 1:
+        case BUCKET_48 * 2 / 8 + 2 + CHECKSUM_1:
             bucketCount = BUCKET_48;
-            checksumLength = 1;
+            checksumLength = CHECKSUM_1;
             break;
-        case BUCKET_128 * 2 / 8 + 2 + 1:
+        case BUCKET_128 * 2 / 8 + 2 + CHECKSUM_1:
             bucketCount = BUCKET_128;
-            checksumLength = 1;
+            checksumLength = CHECKSUM_1;
             break;
-        case BUCKET_128 * 2 / 8 + 2 + 3:
+        case BUCKET_128 * 2 / 8 + 2 + CHECKSUM_3:
             bucketCount = BUCKET_128;
-            checksumLength = 3;
+            checksumLength = CHECKSUM_3;
             break;
-        case BUCKET_256 * 2 / 8 + 2 + 1:
+        case BUCKET_256 * 2 / 8 + 2 + CHECKSUM_1:
             bucketCount = BUCKET_256;
-            checksumLength = 1;
+            checksumLength = CHECKSUM_1;
             break;
-        case BUCKET_256 * 2 / 8 + 2 + 3:
+        case BUCKET_256 * 2 / 8 + 2 + CHECKSUM_3:
             bucketCount = BUCKET_256;
-            checksumLength = 3;
+            checksumLength = CHECKSUM_3;
             break;
         default:
             throw new IllegalArgumentException(

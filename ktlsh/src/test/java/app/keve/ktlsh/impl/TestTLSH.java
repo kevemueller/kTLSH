@@ -49,6 +49,42 @@ public class TestTLSH extends AbstractImplTest {
     }
 
     /**
+     * Test generating TLSH instance of bad checksum.
+     */
+    @Test
+    public void testOfBadChecksum() {
+        assertThrows(AssertionError.class, () -> TLSH.of(new int[2], 16, 1, 2, new int[32]));
+    }
+
+    /**
+     * Test generating TLSH instance of bad body.
+     */
+    @Test
+    public void testOfBadBody() {
+        assertThrows(AssertionError.class, () -> TLSH.of(new int[3], 16, 1, 2, new int[100]));
+    }
+
+    /**
+     * Test generating TLSH instance of good 1 byte checksum.
+     */
+    @Test
+    public void testOfGood1() {
+        final TLSH tlsh1 = TLSH.of(new int[1], 0, 0, 0, new int[32]);
+        final TLSH tlsh2 = TLSH.of(new byte[TLSH.BUCKET_128 * 2 / 8 + 2 + TLSH.CHECKSUM_1]);
+        assertEquals(tlsh1, tlsh2);
+    }
+
+    /**
+     * Test generating TLSH instance of good 3 byte checksum.
+     */
+    @Test
+    public void testOfGood3() {
+        final TLSH tlsh1 = TLSH.of(new int[3], 0, 0, 0, new int[32]);
+        final TLSH tlsh2 = TLSH.of(new byte[TLSH.BUCKET_128 * 2 / 8 + 2 + TLSH.CHECKSUM_3]);
+        assertEquals(tlsh1, tlsh2);
+    }
+
+    /**
      * Test TLSH.toString().
      */
     @Test
@@ -71,6 +107,25 @@ public class TestTLSH extends AbstractImplTest {
         assertEquals(tlsh1, tlsh2);
         assertEquals(tlsh1.hashCode(), tlsh2.hashCode());
         assertNotEquals(tlsh1, "Hello World!");
+    }
+
+    /**
+     * Test TLSH.equals().
+     */
+    @Test
+    public void testEquals2() throws NoSuchAlgorithmException {
+        final TLSH tlsh11110 = TLSH.of(new int[] {1}, 1, 1, 1, new int[32]);
+        final TLSH tlsh31110 = TLSH.of(new int[] {3}, 1, 1, 1, new int[32]);
+        final TLSH tlsh13110 = TLSH.of(new int[] {1}, 3, 1, 1, new int[32]);
+        final TLSH tlsh11310 = TLSH.of(new int[] {1}, 1, 3, 1, new int[32]);
+        final TLSH tlsh11130 = TLSH.of(new int[] {1}, 1, 1, 3, new int[32]);
+        final TLSH tlsh1111x = TLSH.of(new int[] {1}, 1, 1, 3, new int[64]);
+        assertNotEquals(tlsh11110, tlsh31110);
+        assertNotEquals(tlsh11110, tlsh13110);
+        assertNotEquals(tlsh11110, tlsh13110);
+        assertNotEquals(tlsh11110, tlsh11310);
+        assertNotEquals(tlsh11110, tlsh11130);
+        assertNotEquals(tlsh11110, tlsh1111x);
     }
 
     /**

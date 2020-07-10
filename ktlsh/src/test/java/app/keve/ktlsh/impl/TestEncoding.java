@@ -29,8 +29,6 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import com.trendmicro.tlsh.Tlsh;
 import com.trendmicro.tlsh.TlshCreator;
@@ -45,7 +43,7 @@ import app.keve.ktlsh.testutil.TestUtil;
  *
  */
 public final class TestEncoding extends AbstractImplTest {
- 
+
     private static final class SampleData {
         /** random byte buffer. */
         public final byte[] buf;
@@ -106,7 +104,7 @@ public final class TestEncoding extends AbstractImplTest {
      * Test for random sample data.
      * 
      * @throws NoSuchAlgorithmException if the TLSH algorithm is not registered
-     * @throws NoSuchProviderException if the provider cannot be found
+     * @throws NoSuchProviderException  if the provider cannot be found
      */
     @Test
     public void testSampleData() throws NoSuchAlgorithmException, NoSuchProviderException {
@@ -129,34 +127,24 @@ public final class TestEncoding extends AbstractImplTest {
 
     /**
      * Test for a curated list of hashes.
-     * 
-     * @param tlsh the hash
      */
-    @ParameterizedTest(name = "{index}")
-    @MethodSource("sampleTLSH")
-    public void testSampleHash(final TLSH tlsh) {
-        final byte[] tlshBuf = tlsh.pack();
-        final TLSH tlshFromBuf = TLSH.of(tlshBuf);
-        assertEquals(tlsh, tlshFromBuf);
-        final String tlshHex = TLSHUtil.encoded(tlshBuf);
-        final Tlsh tmTlsh = Tlsh.fromTlshStr(tlshHex);
-        assertArrayEquals(TMTestUtil.getChecksum(tmTlsh), tlshFromBuf.checksum);
-        assertEquals(TMTestUtil.getLvalue(tmTlsh), tlshFromBuf.lValue);
-        assertEquals(TMTestUtil.getQ1ratio(tmTlsh), tlshFromBuf.q1);
-        assertEquals(TMTestUtil.getQ2ratio(tmTlsh), tlshFromBuf.q2);
-        assertArrayEquals(TMTestUtil.getCodes(tmTlsh), tlshFromBuf.body);
+    @Test
+    public void testSampleHash() {
+        // converted from ParameterizedTest as it clutters the log
+        SAMPLE_TLSH.stream().parallel().forEach(tlsh -> {
+            final byte[] tlshBuf = tlsh.pack();
+            final TLSH tlshFromBuf = TLSH.of(tlshBuf);
+            assertEquals(tlsh, tlshFromBuf);
+            final String tlshHex = TLSHUtil.encoded(tlshBuf);
+            final Tlsh tmTlsh = Tlsh.fromTlshStr(tlshHex);
+            assertArrayEquals(TMTestUtil.getChecksum(tmTlsh), tlshFromBuf.checksum);
+            assertEquals(TMTestUtil.getLvalue(tmTlsh), tlshFromBuf.lValue);
+            assertEquals(TMTestUtil.getQ1ratio(tmTlsh), tlshFromBuf.q1);
+            assertEquals(TMTestUtil.getQ2ratio(tmTlsh), tlshFromBuf.q2);
+            assertArrayEquals(TMTestUtil.getCodes(tmTlsh), tlshFromBuf.body);
 
-        final byte[] buf2 = TLSHUtil.hexToBytes(tlshHex);
-        assertArrayEquals(tlshBuf, buf2);
+            final byte[] buf2 = TLSHUtil.hexToBytes(tlshHex);
+            assertArrayEquals(tlshBuf, buf2);
+        });
     }
-
-    /**
-     * Obtain curated list of TLSH samples.
-     * 
-     * @return the samples.
-     */
-    public static List<TLSH> sampleTLSH() {
-        return SAMPLE_TLSH;
-    }
-
 }
